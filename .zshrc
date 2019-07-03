@@ -113,3 +113,5 @@ source $ZSH/oh-my-zsh.sh
 alias docs="cd /Users/dpreston/documents"
 alias starry="cd /Users/dpreston/documents/starry"
 alias gs="git status"
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+

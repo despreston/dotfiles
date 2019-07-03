@@ -1,10 +1,17 @@
+set autochdir
 set autoindent
 set colorcolumn=80
 set expandtab
+set foldlevel=2
+set foldmethod=indent
+set foldnestmax=10
 set guifont=OperatorMonoSSm
 set hlsearch
 set linespace=1
+set nofoldenable
 set number 
+set relativenumber
+set rnu
 set shiftwidth=2
 set showcmd
 set smartindent
@@ -22,18 +29,22 @@ autocmd FileType js,vue autocmd BufWritePre <buffer> %s/\s\+$//e
 " change swp file location so build systems dont pick up swp files
 :set directory=$HOME/.vim/swapfiles/
 
+" Press Space to turn off highlighting and clear any message already displayed.
+:nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+
 """""""""""""
 " Plugins
 """""""""""""
 call plug#begin('~/.vim/plugged')
   Plug 'christoomey/vim-sort-motion'
   Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'drewtempelmeyer/palenight.vim'
+  Plug 'despreston/palenight.vim'
   Plug 'itchyny/lightline.vim'
   Plug 'michaeljsmith/vim-indent-object'
   Plug 'posva/vim-vue'
   Plug 'scrooloose/nerdtree'
   Plug 'sheerun/vim-polyglot'
+  Plug 'pangloss/vim-javascript'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
   Plug 'zhaocai/GoldenView.Vim'
@@ -42,7 +53,7 @@ call plug#end()
 """""""""""""""""""""""
 " Theme Settings
 """""""""""""""""""""""
-set background=dark
+" set background=dark
 let g:palenight_terminal_italics=1
 colorscheme palenight
 set termguicolors
@@ -61,6 +72,7 @@ let g:NERDTreeWinSize=25
 map <C-t> :NERDTreeToggle<CR>
 :let g:NERDTreeShowLineNumbers=1
 :autocmd BufEnter NERD_* setlocal rnu
+let NERDTreeShowHidden=1
 
 " enable backspace to delete over line breaks or auto-inserted indents
 set backspace=indent,eol,start
