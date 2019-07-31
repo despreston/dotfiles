@@ -26,28 +26,51 @@ autocmd BufWritePost .vimrc source %
 " remove trailing spaces from certain file types
 autocmd FileType js,vue autocmd BufWritePre <buffer> %s/\s\+$//e
 
-" change swp file location so build systems dont pick up swp files
-:set directory=$HOME/.vim/swapfiles/
+" html-style syntax-highlighting for .hbs files
+autocmd BufNewFile,BufRead *.hbs set syntax=html
 
-" Press Space to turn off highlighting and clear any message already displayed.
-:nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+" change swp file location so build systems dont pick up swp files
+set directory=$HOME/.vim/swapfiles/
+
+let mapleader = "\<Space>"
+
+" save and escape
+nnoremap <Leader>w :w<CR>
+
+" quit and escape
+nnoremap <Leader>q :q<CR>
+
+" insert line and stay in normal mode
+nnoremap <Leader>o o<esc>
+
+" paste from register 0 in normal mode
+nnoremap <Leader>0 "0p
+
+" CtrlP
+nnoremap <Leader>p :CtrlP<CR>
+
+" NERDTree
+nnoremap <Leader>t :NERDTreeToggle<CR>
+
+" Clear search highlighting
+nnoremap <Leader>c :nohl<CR>
 
 """""""""""""
 " Plugins
 """""""""""""
 call plug#begin('~/.vim/plugged')
-  Plug 'christoomey/vim-sort-motion'
-  Plug 'ctrlpvim/ctrlp.vim'
-  Plug 'despreston/palenight.vim'
-  Plug 'itchyny/lightline.vim'
-  Plug 'michaeljsmith/vim-indent-object'
-  Plug 'posva/vim-vue'
-  Plug 'scrooloose/nerdtree'
-  Plug 'sheerun/vim-polyglot'
-  Plug 'pangloss/vim-javascript'
-  Plug 'tpope/vim-commentary'
-  Plug 'tpope/vim-surround'
-  Plug 'zhaocai/GoldenView.Vim'
+   Plug 'christoomey/vim-sort-motion'
+   Plug 'ctrlpvim/ctrlp.vim'
+   Plug 'despreston/palenight.vim'
+   Plug 'elixir-editors/vim-elixir'
+   Plug 'itchyny/lightline.vim'
+   Plug 'michaeljsmith/vim-indent-object'
+   Plug 'pangloss/vim-javascript'
+   Plug 'posva/vim-vue'
+   Plug 'scrooloose/nerdtree'
+   Plug 'tpope/vim-commentary'
+   Plug 'tpope/vim-surround'
+   Plug 'zhaocai/GoldenView.Vim'
 call plug#end()
 
 """""""""""""""""""""""
@@ -66,12 +89,15 @@ let g:ctrlp_map = '<c-o>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|dist'
 let g:ctrlp_lazy_update = 100
+" open in vertical split with <cr>
+let g:ctrlp_prompt_mappings = {
+    \ 'AcceptSelection("e")': ['<c-v>', '<2-LeftMouse>'],
+    \ 'AcceptSelection("v")': ['<cr>', '<RightMouse>'],
+    \ }
 
 " NODETree settings
 let g:NERDTreeWinSize=25
-map <C-t> :NERDTreeToggle<CR>
-:let g:NERDTreeShowLineNumbers=1
-:autocmd BufEnter NERD_* setlocal rnu
+let g:NERDTreeShowLineNumbers=1
 let NERDTreeShowHidden=1
 
 " enable backspace to delete over line breaks or auto-inserted indents
@@ -84,5 +110,5 @@ set splitright
 set laststatus=2
 
 " GoldenView shortcuts
-nmap <silent> <C-]>  <Plug>GoldenViewNext
-nmap <silent> <C-[>  <Plug>GoldenViewPrevious
+nmap <silent> <C-k>  <Plug>GoldenViewNext
+nmap <silent> <C-j>  <Plug>GoldenViewPrevious
