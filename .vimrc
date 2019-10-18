@@ -1,4 +1,3 @@
-set autochdir
 set autoindent
 set colorcolumn=80
 set expandtab
@@ -26,8 +25,11 @@ autocmd BufWritePost .vimrc source %
 " remove trailing spaces from certain file types
 autocmd FileType js,vue autocmd BufWritePre <buffer> %s/\s\+$//e
 
-" html-style syntax-highlighting for .hbs files
-autocmd BufNewFile,BufRead *.hbs set syntax=html
+" html-style syntax-highlighting for .hbs, .vue files
+autocmd BufNewFile,BufRead *.hbs,*.vue set syntax=html
+
+" set .hbs, .vue files to .html format so splits are resized correctly
+autocmd BufNewFile,BufRead *.hbs,*.vue set ft=html
 
 " change swp file location so build systems dont pick up swp files
 set directory=$HOME/.vim/swapfiles/
@@ -66,11 +68,12 @@ call plug#begin('~/.vim/plugged')
    Plug 'itchyny/lightline.vim'
    Plug 'michaeljsmith/vim-indent-object'
    Plug 'pangloss/vim-javascript'
-   Plug 'posva/vim-vue'
+   " Plug 'posva/vim-vue'
    Plug 'scrooloose/nerdtree'
    Plug 'tpope/vim-commentary'
    Plug 'tpope/vim-surround'
    Plug 'zhaocai/GoldenView.Vim'
+   Plug 'tpope/vim-fugitive'
 call plug#end()
 
 """""""""""""""""""""""
@@ -80,7 +83,17 @@ call plug#end()
 let g:palenight_terminal_italics=1
 colorscheme palenight
 set termguicolors
-let g:lightline = { 'colorscheme': 'palenight' }
+
+let g:lightline = {
+      \ 'colorscheme': 'palenight',
+      \ 'component_function': {
+      \   'filename': 'LightLineFilename'
+      \ }
+      \ }
+function! LightLineFilename()
+  return expand('%')
+endfunction
+" let g:lightline = { 'colorscheme': 'palenight' }
 
 let g:polyglot_disabled = ['json', 'jsx', 'javascript', 'vue']
 
@@ -109,6 +122,3 @@ set splitright
 " idk what this does but it fixes lightline
 set laststatus=2
 
-" GoldenView shortcuts
-nmap <silent> <C-k>  <Plug>GoldenViewNext
-nmap <silent> <C-j>  <Plug>GoldenViewPrevious
