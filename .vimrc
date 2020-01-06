@@ -57,6 +57,9 @@ nnoremap <Leader>t :NERDTreeToggle<CR>
 " Clear search highlighting
 nnoremap <Leader>c :nohl<CR>
 
+" Command for refreshing CTRL+P cache and buffers to pick up new files
+command Refresh CtrlPClearCache | bufdo e
+
 """""""""""""
 " Plugins
 """""""""""""
@@ -64,7 +67,7 @@ call plug#begin('~/.vim/plugged')
    Plug 'christoomey/vim-sort-motion'
    Plug 'ctrlpvim/ctrlp.vim'
    Plug 'despreston/palenight.vim'
-   Plug 'elixir-editors/vim-elixir'
+   " Plug 'elixir-editors/vim-elixir'
    Plug 'itchyny/lightline.vim'
    Plug 'michaeljsmith/vim-indent-object'
    Plug 'pangloss/vim-javascript'
@@ -74,6 +77,7 @@ call plug#begin('~/.vim/plugged')
    Plug 'tpope/vim-surround'
    Plug 'zhaocai/GoldenView.Vim'
    Plug 'tpope/vim-fugitive'
+   Plug 'tmsvg/pear-tree'
 call plug#end()
 
 """""""""""""""""""""""
