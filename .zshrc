@@ -54,6 +54,11 @@ function precmd {
   echo -ne "\033]0;$(repo_name)\007"
 }
 
+# Show aws logs using awslogs
+showlogs() {
+  awslogs get /aws/lambda/$1 ALL --watch
+}
+
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
@@ -116,5 +121,6 @@ alias gs="git status"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
 alias plan="vim ~/.plan"
+
 
 source /Users/dpreston/Library/Preferences/org.dystroy.broot/launcher/bash/br
