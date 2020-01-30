@@ -17,6 +17,7 @@ set smartindent
 set smarttab
 set tabstop=2
 set textwidth=80
+set title
 syntax on
 
 " source .vimrc anytime theres a change
@@ -83,7 +84,6 @@ call plug#end()
 """""""""""""""""""""""
 " Theme Settings
 """""""""""""""""""""""
-" set background=dark
 let g:palenight_terminal_italics=1
 colorscheme palenight
 set termguicolors
@@ -97,8 +97,8 @@ let g:lightline = {
 function! LightLineFilename()
   return expand('%')
 endfunction
-" let g:lightline = { 'colorscheme': 'palenight' }
 
+" I have better plugins to handle syntax for these filetypes
 let g:polyglot_disabled = ['json', 'jsx', 'javascript', 'vue']
 
 " shortcut for ctrlp
@@ -106,6 +106,7 @@ let g:ctrlp_map = '<c-o>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|dist'
 let g:ctrlp_lazy_update = 100
+
 " open in vertical split with <cr>
 let g:ctrlp_prompt_mappings = {
     \ 'AcceptSelection("e")': ['<c-v>', '<2-LeftMouse>'],

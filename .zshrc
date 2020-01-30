@@ -117,3 +117,4 @@ alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
 alias plan="vim ~/.plan"
 
+source /Users/dpreston/Library/Preferences/org.dystroy.broot/launcher/bash/br
