@@ -18,7 +18,9 @@ set smarttab
 set tabstop=2
 set textwidth=80
 set title
+set noshowmode
 syntax on
+set titlestring=%{expand(\"%:p:h\")}
 
 " source .vimrc anytime theres a change
 autocmd BufWritePost .vimrc source %
