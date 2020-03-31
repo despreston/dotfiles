@@ -59,6 +59,19 @@ showlogs() {
   awslogs get /aws/lambda/$1 ALL --watch
 }
 
+gh() {
+  org=$1
+  repo=$2
+
+  if [ $org = "starry" ]; then org="ProjectDecibel"; fi
+  if [ $org = "des" ]; then org="despreston"; fi
+  if [ $org = "zc" ]; then org="Zero-Collateral"; fi
+
+  if [ $repo = "admin" ]; then repo="admin-api-v2"; fi
+
+  open -a "Google Chrome" http://github.com/$org/$repo
+}
+
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
@@ -127,3 +140,4 @@ alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
 
 bindkey '^f' autosuggest-accept
+export PATH="/usr/local/opt/libpq/bin:$PATH"

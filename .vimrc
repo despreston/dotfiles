@@ -2,12 +2,12 @@ set autoindent
 set colorcolumn=80
 set expandtab
 set foldlevel=2
-set foldmethod=indent
+set foldmethod=manual
 set foldnestmax=10
+set foldenable
 set guifont=OperatorMonoSSm
 set hlsearch
 set linespace=1
-set nofoldenable
 set number 
 set relativenumber
 set rnu
@@ -33,6 +33,9 @@ autocmd BufNewFile,BufRead *.hbs,*.vue set syntax=html
 
 " set .hbs, .vue files to .html format so splits are resized correctly
 autocmd BufNewFile,BufRead *.hbs,*.vue set ft=html
+
+" js-style syntax-highlighting for .json files
+autocmd BufNewFile,BufRead *.json set syntax=javascript
 
 " change swp file location so build systems dont pick up swp files
 set directory=$HOME/.vim/swapfiles/
@@ -70,16 +73,14 @@ call plug#begin('~/.vim/plugged')
    Plug 'christoomey/vim-sort-motion'
    Plug 'ctrlpvim/ctrlp.vim'
    Plug 'despreston/palenight.vim'
-   " Plug 'elixir-editors/vim-elixir'
    Plug 'itchyny/lightline.vim'
    Plug 'michaeljsmith/vim-indent-object'
    Plug 'pangloss/vim-javascript'
-   " Plug 'posva/vim-vue'
    Plug 'scrooloose/nerdtree'
    Plug 'tpope/vim-commentary'
    Plug 'tpope/vim-surround'
    Plug 'zhaocai/GoldenView.Vim'
-   Plug 'tpope/vim-fugitive'
+   Plug 'kshenoy/vim-signature'
    Plug 'tmsvg/pear-tree'
 call plug#end()
 
@@ -128,4 +129,7 @@ set splitright
 
 " idk what this does but it fixes lightline
 set laststatus=2
+
+" color of the marks in the vimgutter
+highlight SignatureMarkText guifg=#ffcb6b
 
