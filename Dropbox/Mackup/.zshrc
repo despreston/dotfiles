@@ -1,4 +1,3 @@
-
 # If you come from bash you might have to change your $PATH.
 export PATH="$HOME/.cargo/bin:$PATH"
 
@@ -7,6 +6,34 @@ export NVM_DIR="/Users/dpreston/.nvm"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/Users/dpreston/.oh-my-zsh"
+
+# set terminal title
+function repo_name {
+  git remote -v 2> /dev/null | head -n1 | awk '{print $2}' | sed 's/.*\///' | sed 's/\.git//'
+}
+
+function precmd {
+  echo -ne "\033]0;$(repo_name)\007"
+}
+
+# get the weather!
+function weather {
+  curl wttr.in/$1?format="%l:+%c+%t(%f)+%w\n"
+}
+
+function deployoperator {
+  ssh des-pi 'sudo service operator stop' && scp bin/operator des-pi:operator && ssh des-pi 'sudo service operator start'
+}
+
+# Show aws logs using awslogs
+showlogs() {
+  awslogs get /aws/lambda/$1 ALL --watch
+}
+
+switchgit() {
+  ssh-add -D
+  ssh-add ~/.ssh/$1
+}
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -45,33 +72,6 @@ ZSH_THEME="robbyrussell"
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
 
-# set terminal title
-function repo_name {
-  git remote -v 2> /dev/null | head -n1 | awk '{print $2}' | sed 's/.*\///' | sed 's/\.git//'
-}
-
-function precmd {
-  echo -ne "\033]0;$(repo_name)\007"
-}
-
-# Show aws logs using awslogs
-showlogs() {
-  awslogs get /aws/lambda/$1 ALL --watch
-}
-
-gh() {
-  org=$1
-  repo=$2
-
-  if [ $org = "starry" ]; then org="ProjectDecibel"; fi
-  if [ $org = "des" ]; then org="despreston"; fi
-  if [ $org = "zc" ]; then org="Zero-Collateral"; fi
-
-  if [ $repo = "admin" ]; then repo="admin-api-v2"; fi
-
-  open -a "Google Chrome" http://github.com/$org/$repo
-}
-
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
 
@@ -81,7 +81,7 @@ gh() {
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -129,15 +129,30 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-# alias ohmyzsh="mate ~/.oh-my-zsh"
 alias docs="cd /Users/dpreston/documents"
 alias starry="cd /Users/dpreston/documents/starry"
-alias gs="git status"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
 alias plan="vim ~/.plan"
 alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
+alias vw='vim -c VimwikiIndex'
+alias gs='git status'
+alias sg='switchgit id_rsa'
+# I have my own forked version of Github CLI
+alias gh="~/Documents/cli-1/bin/gh"
 
+# start tmux w/ correct TERM
+alias tmux="TERM=xterm-256color-italic tmux"
+
+bindkey '^w' forward-word
 bindkey '^f' autosuggest-accept
+
 export PATH="/usr/local/opt/libpq/bin:$PATH"
+
+# Go
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
+
+export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
+
