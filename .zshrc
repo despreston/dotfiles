@@ -1,6 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-export PATH="$HOME/.cargo/bin:$PATH"
-
 export NVM_DIR="/Users/dpreston/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
@@ -156,3 +153,4 @@ export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 
+if [ -e /Users/dpreston/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/dpreston/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

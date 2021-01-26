@@ -5,7 +5,6 @@ set expandtab
 set foldenable
 set foldlevel=2
 set foldmethod=manual
-set foldnestmax=10
 set guifont=OperatorMonoSSm
 set hlsearch
 set laststatus=2
@@ -29,22 +28,16 @@ syntax on
 " source .vimrc anytime theres a change
 autocmd BufWritePost .vimrc source %
 
-" html-style syntax-highlighting for .hbs, .vue files
-autocmd BufNewFile,BufRead *.hbs,*.vue set syntax=html
-
 " set .hbs, .vue files to .html format so splits are resized correctly
 autocmd BufNewFile,BufRead *.hbs set ft=html
 
-" js-style syntax-highlighting for .json files
-autocmd BufNewFile,BufRead *.json set syntax=javascript
+" json-style syntax-highlighting for .amprc files
+autocmd BufNewFile,BufRead .amprc set syntax=json
 
 " change swp file location so build systems dont pick up swp files
 set directory=$HOME/.vim/swapfiles/
 
 let mapleader = "\<Space>"
-
-" I have better plugins to handle syntax for these filetypes
-let g:polyglot_disabled = ['json', 'jsx', 'javascript', 'vue']
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remappings
@@ -66,9 +59,6 @@ nnoremap <Leader>c :nohl<CR>
 
 " Command for refreshing CTRL+P cache and buffers to pick up new files
 command Refresh CtrlPClearCache | bufdo e
-
-" Copy the file path to the clipboard.
-command Cp let @*=expand("%:p")
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
@@ -132,15 +122,17 @@ let NERDTreeShowHidden=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings for vim-go
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:go_fmt_command="goimports"
 let g:go_highlight_functions=1
 let g:go_highlight_operators=1
 let g:go_highlight_function_calls=1
 let g:go_highlight_types=1
 let g:go_highlight_function_parameters=1
-let g:go_gopls_enabled=1
-" Disabling because I also use ale for linting.
 let g:go_fmt_fail_silently=1
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Settings for vimwiki
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Path of vimwiki files
 let g:vimwiki_list = [{'path' : '/Users/dpreston/Dropbox/vimwiki'}]
 
@@ -149,7 +141,6 @@ let g:vimwiki_list = [{'path' : '/Users/dpreston/Dropbox/vimwiki'}]
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Run both javascript and vue linters for vue files.
 let g:ale_linter_aliases = {'vue': ['vue', 'javascript']}
-
 let g:ale_linters = {'vue': ['eslint']}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
