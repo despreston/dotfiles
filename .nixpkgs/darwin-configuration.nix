@@ -12,6 +12,7 @@
     mongodb
     redis
     awscli2
+    hugo
   ];
 
   # Use a custom configuration.nix location.

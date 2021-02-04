@@ -1,3 +1,5 @@
+export EDITOR=vim
+
 export NVM_DIR="/Users/dpreston/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
@@ -130,17 +132,19 @@ alias docs="cd /Users/dpreston/documents"
 alias starry="cd /Users/dpreston/documents/starry"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
-alias plan="vim ~/.plan"
 alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
-alias sg='switchgit id_rsa'
+
 # I have my own forked version of Github CLI
 alias gh="~/Documents/cli-1/bin/gh"
 
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"
+
+# tmux: split-window vertically, resize right pane to 80
+alias tdev="tmux splitw -h -l 80"
 
 bindkey '^w' forward-word
 bindkey '^f' autosuggest-accept
