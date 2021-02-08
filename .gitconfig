@@ -1,0 +1,9 @@
+[pager]
+	branch = false
+[user]
+	name = Des Preston
+	email = despreston@gmail.com
+[push]
+	default = simple
+[oh-my-zsh]
+	hide-dirty = 1

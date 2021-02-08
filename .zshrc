@@ -1,10 +1,9 @@
 export EDITOR=vim
-
-export NVM_DIR="/Users/dpreston/.nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/dpreston/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # set terminal title
 function repo_name {
@@ -100,7 +99,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
-  zsh-autosuggestions
+#  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -128,8 +127,8 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias docs="cd /Users/dpreston/documents"
-alias starry="cd /Users/dpreston/documents/starry"
+alias dev="cd $HOME/dev"
+alias starry="cd $HOME/documents/starry"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
 alias zshconfig="vim ~/.zshrc"
@@ -157,4 +156,4 @@ export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 
-if [ -e /Users/dpreston/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/dpreston/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

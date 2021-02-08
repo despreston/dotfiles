@@ -1,11 +1,11 @@
 set autoindent
 set backspace=indent,eol,start
 set colorcolumn=80
+set guifont=OperatorMonoSSm
 set expandtab
 set foldenable
 set foldlevel=2
 set foldmethod=manual
-set guifont=OperatorMonoSSm
 set hlsearch
 set laststatus=2
 set linespace=1
@@ -64,21 +64,21 @@ command Refresh CtrlPClearCache | bufdo e
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
-   Plug 'christoomey/vim-sort-motion'
-   Plug 'ctrlpvim/ctrlp.vim'
-   Plug 'despreston/palenight.vim'
-   Plug 'fatih/vim-go'
-   Plug 'itchyny/lightline.vim'
-   Plug 'kshenoy/vim-signature'
-   Plug 'michaeljsmith/vim-indent-object'
-   Plug 'pangloss/vim-javascript'
-   Plug 'scrooloose/nerdtree'
-   Plug 'tmsvg/pear-tree'
-   Plug 'tpope/vim-commentary'
-   Plug 'tpope/vim-surround'
-   Plug 'vimwiki/vimwiki'
-   Plug 'dense-analysis/ale'
-   Plug 'zhaocai/GoldenView.Vim'
+    Plug 'christoomey/vim-sort-motion'
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'fatih/vim-go'
+    Plug 'itchyny/lightline.vim'
+    Plug 'kshenoy/vim-signature'
+    Plug 'michaeljsmith/vim-indent-object'
+    Plug 'pangloss/vim-javascript'
+    Plug 'scrooloose/nerdtree'
+    Plug 'tmsvg/pear-tree'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-surround'
+    Plug 'vimwiki/vimwiki'
+    Plug 'dense-analysis/ale'
+    Plug 'zhaocai/GoldenView.Vim'
+    Plug 'despreston/palenight.vim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -134,7 +134,7 @@ let g:go_fmt_fail_silently=1
 " Settings for vimwiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Path of vimwiki files
-let g:vimwiki_list = [{'path' : '/Users/dpreston/Dropbox/vimwiki'}]
+let g:vimwiki_list = [{'path' : '/Users/despreston/Dropbox/vimwiki'}]
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
@@ -154,4 +154,3 @@ let g:ale_fixers = {
 
 " color of the marks in the vimgutter
 highlight SignatureMarkText guifg=#ffcb6b
-
