@@ -128,7 +128,7 @@ source $ZSH/oh-my-zsh.sh
 #
 # Example aliases
 alias dev="cd $HOME/dev"
-alias starry="cd $HOME/documents/starry"
+alias starry="cd $HOME/dev/starry"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
 alias zshconfig="vim ~/.zshrc"
@@ -136,14 +136,23 @@ alias vimconfig="vim ~/.vimrc"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 
-# I have my own forked version of Github CLI
-alias gh="~/Documents/cli-1/bin/gh"
-
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"
 
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80"
+
+# tmux: vim wiki, operator logs, horchdienst logs
+alias tdash="tmux \
+  renamew dash \; \
+  splitw -h \; \
+  splitw -v \; \
+  send-keys -t 0 C-z 'vw' Enter \; \
+  send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
+  send-keys -t 2 C-z 'showlogs horchdienst' Enter
+"
+  # splitw -h 'ssh des-pi journalctl -u operator.service -f' \; \
+  # splitw -v 'showlogs horchdienst'
 
 bindkey '^w' forward-word
 bindkey '^f' autosuggest-accept
