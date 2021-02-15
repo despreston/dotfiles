@@ -8,8 +8,6 @@ set foldlevel=2
 set foldmethod=manual
 set hlsearch
 set laststatus=2
-set linespace=1
-set noshowmode
 set number
 set relativenumber
 set shiftwidth=2
@@ -36,6 +34,9 @@ autocmd BufNewFile,BufRead .amprc set syntax=json
 
 " change swp file location so build systems dont pick up swp files
 set directory=$HOME/.vim/swapfiles/
+
+" Go spacing
+au Filetype go setl noet ts=4 sw=4
 
 let mapleader = "\<Space>"
 
@@ -64,7 +65,6 @@ command Refresh CtrlPClearCache | bufdo e
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
-    Plug 'christoomey/vim-sort-motion'
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'fatih/vim-go'
     Plug 'itchyny/lightline.vim'
@@ -125,9 +125,9 @@ let NERDTreeShowHidden=1
 let g:go_fmt_command="goimports"
 let g:go_highlight_functions=1
 let g:go_highlight_operators=1
-let g:go_highlight_function_calls=1
+let g:go_highlight_function_calls=0
 let g:go_highlight_types=1
-let g:go_highlight_function_parameters=1
+let g:go_highlight_function_parameters=0
 let g:go_fmt_fail_silently=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
