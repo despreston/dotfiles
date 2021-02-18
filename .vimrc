@@ -79,17 +79,21 @@ call plug#begin('~/.vim/plugged')
     Plug 'dense-analysis/ale'
     Plug 'zhaocai/GoldenView.Vim'
     Plug 'despreston/palenight.vim'
+    Plug 'morhetz/gruvbox'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Theme Settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:palenight_terminal_italics=1
-colorscheme palenight
+let g:gruvbox_italic=1
+let g:gruvbox_contrast_dark='soft'
+
+colorscheme gruvbox
 set termguicolors
 
 let g:lightline = {
-      \ 'colorscheme': 'palenight',
+      \ 'colorscheme': 'gruvbox',
       \ 'component_function': {
       \   'filename': 'LightLineFilename'
       \ }
