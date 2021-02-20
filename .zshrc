@@ -65,7 +65,7 @@ alias gs='git status'
 alias tmux="TERM=xterm-256color-italic tmux"
 
 # tmux: split-window vertically, resize right pane to 80
-alias tdev="tmux splitw -h -l 80"
+alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
 
 # tmux: vim wiki, operator logs, horchdienst logs
 alias tdash="tmux \
@@ -76,9 +76,6 @@ alias tdash="tmux \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
   send-keys -t 2 C-z 'showlogs horchdienst' Enter
 "
-
-bindkey '^w' forward-word
-bindkey '^f' autosuggest-accept
 
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 
