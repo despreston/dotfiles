@@ -39,6 +39,7 @@ set directory=$HOME/.vim/swapfiles/
 au Filetype go setl noet ts=4 sw=4
 
 let mapleader = "\<Space>"
+let @i='oif err != nil {'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remappings
