@@ -134,6 +134,7 @@ let g:go_highlight_function_calls=0
 let g:go_highlight_types=1
 let g:go_highlight_function_parameters=0
 let g:go_fmt_fail_silently=1
+let g:go_def_mod_mode='godef'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings for vimwiki

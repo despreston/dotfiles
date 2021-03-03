@@ -1,10 +1,23 @@
+##############################################################################
+# Env Vars
+##############################################################################
 export EDITOR=vim
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# Go
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
+
+export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
+
+###############################################################################
+# Functions
+###############################################################################
 # set terminal title
 function repo_name {
   git remote -v 2> /dev/null | head -n1 | awk '{print $2}' | sed 's/.*\///' | sed 's/\.git//'
@@ -14,11 +27,6 @@ function precmd {
   echo -ne "\033]0;$(repo_name)\007"
 }
 
-# get the weather!
-function weather {
-  curl wttr.in/$1?format="%l:+%c+%t(%f)+%w\n"
-}
-
 function deployoperator {
   ssh des-pi 'sudo service operator stop' && scp bin/operator des-pi:operator && ssh des-pi 'sudo service operator start'
 }
@@ -26,11 +34,6 @@ function deployoperator {
 # Show aws logs using awslogs
 showlogs() {
   awslogs get /aws/lambda/$1 ALL --watch
-}
-
-switchgit() {
-  ssh-add -D
-  ssh-add ~/.ssh/$1
 }
 
 # Set name of the theme to load --- if set to "random", it will
@@ -52,6 +55,9 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+##############################################################################
+# Aliases
+##############################################################################
 alias dev="cd $HOME/dev"
 alias starry="cd $HOME/dev/starry"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
@@ -76,13 +82,3 @@ alias tdash="tmux \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
   send-keys -t 2 C-z 'showlogs horchdienst' Enter
 "
-
-export PATH="/usr/local/opt/libpq/bin:$PATH"
-
-# Go
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
-
-export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
-
-if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
