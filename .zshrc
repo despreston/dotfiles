@@ -66,6 +66,7 @@ alias zshconfig="vim ~/.zshrc"
 alias vimconfig="vim ~/.vimrc"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
+alias ls='ls -alG'
 
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"
