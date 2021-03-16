@@ -31,15 +31,15 @@ function deployoperator {
   ssh des-pi 'sudo service operator stop' && scp bin/operator des-pi:operator && ssh des-pi 'sudo service operator start'
 }
 
+###############################################################################
+# Misc
+###############################################################################
+
 # Show aws logs using awslogs
 showlogs() {
   awslogs get /aws/lambda/$1 ALL --watch
 }
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="robbyrussell"
 
 # disable auto-setting terminal title.
