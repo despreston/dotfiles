@@ -1,4 +1,7 @@
 set autoindent
+set noswapfile
+set scrolloff=4
+set incsearch
 set backspace=indent,eol,start
 set colorcolumn=80
 set guifont=OperatorMonoSSm
@@ -6,7 +9,6 @@ set expandtab
 set foldenable
 set foldlevel=2
 set foldmethod=manual
-set hlsearch
 set laststatus=2
 set number
 set relativenumber
@@ -20,7 +22,7 @@ set tabstop=2
 set textwidth=80
 set title
 set titlestring=%{expand(\"%:p:h\")}
-set regexpengine=1 " using the old regex engine makes scrolling faster
+set regexpengine=1
 syntax on
 
 " source .vimrc anytime theres a change
@@ -31,9 +33,6 @@ autocmd BufNewFile,BufRead *.hbs set ft=html
 
 " json-style syntax-highlighting for .amprc files
 autocmd BufNewFile,BufRead .amprc set syntax=json
-
-" change swp file location so build systems dont pick up swp files
-set directory=$HOME/.vim/swapfiles/
 
 " Go spacing
 au Filetype go setl noet ts=4 sw=4
@@ -53,26 +52,19 @@ nnoremap <Leader>q :q<CR>
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
 
-" NERDTree
-nnoremap <Leader>t :NERDTreeToggle<CR>
-
-" Clear search highlighting
-nnoremap <Leader>c :nohl<CR>
-
-" Command for refreshing CTRL+P cache and buffers to pick up new files
-command Refresh CtrlPClearCache | bufdo e
+nnoremap <C-f> :GFiles<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
-    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
     Plug 'fatih/vim-go'
     Plug 'itchyny/lightline.vim'
     Plug 'kshenoy/vim-signature'
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'pangloss/vim-javascript'
-    Plug 'scrooloose/nerdtree'
     Plug 'tmsvg/pear-tree'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
@@ -104,27 +96,6 @@ function! LightLineFilename()
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ctrl+P settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ctrlp_map = '<C-f>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|dist'
-let g:ctrlp_lazy_update = 100
-
-" open in vertical split with <cr>
-let g:ctrlp_prompt_mappings = {
-    \ 'AcceptSelection("e")': ['<c-v>', '<2-LeftMouse>'],
-    \ 'AcceptSelection("v")': ['<cr>', '<RightMouse>'],
-    \ }
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NODETree settings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:NERDTreeWinSize=25
-let g:NERDTreeShowLineNumbers=1
-let NERDTreeShowHidden=1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings for vim-go
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:go_fmt_command="goimports"
@@ -140,7 +111,7 @@ let g:go_def_mod_mode='godef'
 " Settings for vimwiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Path of vimwiki files
-let g:vimwiki_list = [{'path' : '/Users/despreston/Dropbox/vimwiki'}]
+let g:vimwiki_list = [{'path' : '/Users/des/Dropbox/vimwiki'}]
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
