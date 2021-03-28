@@ -28,7 +28,9 @@ function precmd {
 }
 
 function deployoperator {
-  ssh des-pi 'sudo service operator stop' && scp bin/operator des-pi:operator && ssh des-pi 'sudo service operator start'
+  echo 'Stopping Operator...' && ssh -t des-pi 'sudo service operator stop' && \
+  echo 'Transferring...' && scp bin/operator des-pi:/home/operator/operator && \
+  echo 'Starting Operator...' && ssh -t des-pi 'sudo service operator start'
 }
 
 ###############################################################################
