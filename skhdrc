@@ -1,0 +1,35 @@
+# Put this in $HOME/.config/skhd/
+
+# Open terminal
+cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
+
+# Open Brave
+cmd - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
+
+# Toggle floating
+alt - f : yabai -m window --toggle float
+
+# fullscreen
+shift + alt - f : yabai -m window --toggle zoom-fullscreen
+
+# float / unfloat window and center on screen
+shift + alt - c : yabai -m window --toggle float; yabai -m window --grid 4:4:1:0:2:4
+
+# make window fill half of screen
+shift + alt - h : yabai -m window --ratio abs:0.5
+
+# focus window
+alt - x : yabai -m window --focus recent
+alt - h : yabai -m window --focus west
+alt - j : yabai -m window --focus south
+alt - k : yabai -m window --focus north
+alt - l : yabai -m window --focus east
+alt - z : yabai -m window --focus stack.prev
+alt - c : yabai -m window --focus stack.next
+
+# rotate tree
+alt - r : yabai -m space --rotate 90
+
+# send window to screen
+alt - n : yabai -m window --display next && yabai -m display --focus next
+alt - p : yabai -m window --display prev && yabai -m display --focus prev
