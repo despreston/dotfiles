@@ -1,5 +1,3 @@
-# Put this in $HOME/.config/skhd/
-
 # Open terminal
 cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 
@@ -7,16 +5,16 @@ cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 cmd - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
 
 # Toggle floating
-alt - f : yabai -m window --toggle float
+shift + alt - f : yabai -m window --toggle float
 
 # fullscreen
-shift + alt - f : yabai -m window --toggle zoom-fullscreen
+alt - f : yabai -m window --toggle zoom-fullscreen
+
+# balance size of windows
+shift + alt - 0 : yabai -m space --balance
 
 # float / unfloat window and center on screen
 shift + alt - c : yabai -m window --toggle float; yabai -m window --grid 4:4:1:0:2:4
-
-# make window fill half of screen
-shift + alt - h : yabai -m window --ratio abs:0.5
 
 # focus window
 alt - x : yabai -m window --focus recent
@@ -26,6 +24,13 @@ alt - k : yabai -m window --focus north
 alt - l : yabai -m window --focus east
 alt - z : yabai -m window --focus stack.prev
 alt - c : yabai -m window --focus stack.next
+
+# swap window
+shift + alt - x : yabai -m window --swap recent
+shift + alt - h : yabai -m window --swap west
+shift + alt - j : yabai -m window --swap south
+shift + alt - k : yabai -m window --swap north
+shift + alt - l : yabai -m window --swap east
 
 # rotate tree
 alt - r : yabai -m space --rotate 90
