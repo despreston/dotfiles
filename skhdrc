@@ -1,8 +1,8 @@
 # Open terminal
 cmd - return : /Applications/iTerm.app/Contents/MacOS/iTerm2
 
-# Open Brave
-cmd - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
+# Open Slack
+alt - s : open -a Slack
 
 # Toggle floating
 shift + alt - f : yabai -m window --toggle float
