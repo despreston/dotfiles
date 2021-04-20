@@ -56,6 +56,7 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+source $HOME/.fzf.zsh
 
 ##############################################################################
 # Aliases

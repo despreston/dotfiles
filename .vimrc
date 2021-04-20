@@ -1,6 +1,6 @@
 set autoindent
 set noswapfile
-set scrolloff=4
+set scrolloff=6
 set incsearch
 set backspace=indent,eol,start
 set colorcolumn=80
@@ -53,6 +53,8 @@ nnoremap <Leader>q :q<CR>
 nnoremap <Leader>o o<esc>
 
 nnoremap <C-f> :GFiles<CR>
+
+nnoremap <Leader>v :Vex<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
