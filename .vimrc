@@ -25,8 +25,10 @@ set titlestring=%{expand(\"%:p:h\")}
 set regexpengine=1
 syntax on
 
-" source .vimrc anytime theres a change
-autocmd BufWritePost .vimrc source %
+" after saving anything in ~/vimwiki, sync to rpi for backup
+au! BufWritePost ~/vimwiki/* silent
+  \ execute "!rsync -avz ~/vimwiki/ des-pi:/home/des/vimwiki" |
+  \ redraw!
 
 " set .hbs, .vue files to .html format so splits are resized correctly
 autocmd BufNewFile,BufRead *.hbs set ft=html
@@ -113,7 +115,7 @@ let g:go_def_mod_mode='godef'
 " Settings for vimwiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Path of vimwiki files
-let g:vimwiki_list = [{'path' : '/Users/des/Dropbox/vimwiki'}]
+let g:vimwiki_list = [{'path' : '/Users/des/vimwiki'}]
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ALE
