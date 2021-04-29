@@ -15,6 +15,10 @@ export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 
+# tanium corp vpn stuff
+export PATH=$PATH:$HOME/bin
+export VPN_USER=des.preston
+
 ###############################################################################
 # Functions
 ###############################################################################
@@ -70,6 +74,7 @@ alias vimconfig="vim ~/.vimrc"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
+alias tanium='dev && cd tanium'
 
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"
@@ -86,3 +91,6 @@ alias tdash="tmux \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
   send-keys -t 2 C-z 'showlogs horchdienst' Enter
 "
+
+# opam configuration
+test -r /Users/des/.opam/opam-init/init.zsh && . /Users/des/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

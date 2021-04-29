@@ -22,7 +22,8 @@ set tabstop=2
 set textwidth=80
 set title
 set titlestring=%{expand(\"%:p:h\")}
-set regexpengine=1
+" set regexpengine=1
+set regexpengine=2
 syntax on
 
 " after saving anything in ~/vimwiki, sync to rpi for backup
@@ -129,6 +130,7 @@ let g:ale_lint_on_insert_leave = 0
 
 let g:ale_fixers = {
       \ '*': ['trim_whitespace'],
+      \ 'typescript': ['deno'],
       \ 'javascript': ['eslint'],
       \ 'vue': ['eslint']
 \}
