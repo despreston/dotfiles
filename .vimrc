@@ -4,7 +4,6 @@ set scrolloff=6
 set incsearch
 set backspace=indent,eol,start
 set colorcolumn=80
-set guifont=OperatorMonoSSm
 set expandtab
 set foldenable
 set foldlevel=2
@@ -22,7 +21,6 @@ set tabstop=2
 set textwidth=80
 set title
 set titlestring=%{expand(\"%:p:h\")}
-" set regexpengine=1
 set regexpengine=2
 syntax on
 
@@ -30,12 +28,6 @@ syntax on
 au! BufWritePost ~/vimwiki/* silent
   \ execute "!rsync -avz ~/vimwiki/ des-pi:/home/des/vimwiki" |
   \ redraw!
-
-" set .hbs, .vue files to .html format so splits are resized correctly
-autocmd BufNewFile,BufRead *.hbs set ft=html
-
-" json-style syntax-highlighting for .amprc files
-autocmd BufNewFile,BufRead .amprc set syntax=json
 
 " Go spacing
 au Filetype go setl noet ts=4 sw=4
@@ -54,6 +46,9 @@ nnoremap <Leader>q :q<CR>
 
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
+
+" run GoTest
+nnoremap <Leader>t :GoTest<CR>
 
 nnoremap <C-f> :GFiles<CR>
 
@@ -111,6 +106,7 @@ let g:go_highlight_types=1
 let g:go_highlight_function_parameters=0
 let g:go_fmt_fail_silently=1
 let g:go_def_mod_mode='godef'
+let g:go_highlight_trailing_whitespace_error=0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings for vimwiki
