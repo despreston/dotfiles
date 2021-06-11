@@ -1,7 +1,7 @@
 ##############################################################################
 # Env Vars
 ##############################################################################
-export EDITOR=vim
+export EDITOR=nvim
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -69,8 +69,9 @@ alias dev="cd $HOME/dev"
 alias starry="cd $HOME/dev/starry"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias admin="starry && cd admin-api-v2"
-alias zshconfig="vim ~/.zshrc"
-alias vimconfig="vim ~/.vimrc"
+alias zshconfig="$EDITOR ~/.zshrc"
+alias vimconfig="$EDITOR ~/.vimrc"
+alias nvimconfig="$EDITOR ~/.config/nvim/init.vim"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
