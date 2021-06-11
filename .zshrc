@@ -76,6 +76,7 @@ alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
 alias tanium='dev && cd tanium'
+alias vim='nvim'
 
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"

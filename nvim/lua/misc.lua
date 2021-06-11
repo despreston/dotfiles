@@ -1,5 +1,17 @@
 -- Treesitter setup
-require('nvim-treesitter.configs').setup { highlight = { enable = true } }
+require('nvim-treesitter.configs').setup {
+  highlight = {
+    enable = true,
+    custom_captures = {
+      ["punctuation.bracket"] = "none",
+      ["property"] = "none",
+      ["parameter"] = "none",
+      ["method"] = "none",
+      ["function"] = "none",
+      ["constant.builtin"] = "Constant",
+    },
+  },
+}
 
 local nvim_lsp = require('lspconfig')
 
