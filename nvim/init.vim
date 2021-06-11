@@ -90,13 +90,22 @@ function! LightLineFilename()
 endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" General visual setting overrides
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" color of the marks in the vimgutter
+hi SignatureMarkText guifg=#ffcb6b
+
+" Don't highlight search results after searching.
+hi Search NONE
+
+" color of line number that cursor is on
+hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings for vimwiki
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Path of vimwiki files
 let g:vimwiki_list = [{'path' : '/Users/des/vimwiki'}]
-
-" color of the marks in the vimgutter
-highlight SignatureMarkText guifg=#ffcb6b
 
 "----------------------------------------------------------------------
 " Neovim
@@ -104,6 +113,3 @@ highlight SignatureMarkText guifg=#ffcb6b
 if has("nvim")
     lua require("misc")
 endif
-
-" Don't highlight search results after searching.
-hi Search NONE

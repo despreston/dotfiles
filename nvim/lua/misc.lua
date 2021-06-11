@@ -7,7 +7,6 @@ require('nvim-treesitter.configs').setup {
       ["property"] = "none",
       ["parameter"] = "none",
       ["method"] = "none",
-      ["function"] = "none",
       ["constant.builtin"] = "Constant",
     },
   },
@@ -23,6 +22,9 @@ local on_attach = function(client, bufnr)
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
+
+  -- format Go files on save
+  vim.api.nvim_command("au BufWritePost *.go lua vim.lsp.buf.formatting()")
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
