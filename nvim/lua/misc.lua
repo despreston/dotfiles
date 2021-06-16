@@ -1,3 +1,5 @@
+require('nvim-autopairs').setup()
+
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
   highlight = {
@@ -24,7 +26,7 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- format Go files on save
-  vim.api.nvim_command("au BufWritePost *.go lua vim.lsp.buf.formatting()")
+  -- vim.api.nvim_command("au BufWritePost *.go lua vim.lsp.buf.formatting()")
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)

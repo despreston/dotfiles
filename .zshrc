@@ -66,14 +66,12 @@ source $HOME/.fzf.zsh
 # Aliases
 ##############################################################################
 alias dev="cd $HOME/dev"
-alias starry="cd $HOME/dev/starry"
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias admin="starry && cd admin-api-v2"
 alias zshconfig="$EDITOR ~/.zshrc"
-alias vimconfig="$EDITOR ~/.vimrc"
 alias nvimconfig="$EDITOR ~/.config/nvim/init.vim"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
+# Git log, but by pressing K on SHAs, you can view the actual diff.
+alias gvim="git log | nvim -R -c 'set hidden nowrap keywordprg=:enew\ \|\ terminal\ \git\ --no-pager\ show | nnoremap q :bd!<cr>' -"
 alias ls='ls -alG'
 alias tanium='dev && cd tanium'
 alias vim='nvim'

@@ -1,22 +1,16 @@
-set autoindent
 set noswapfile
 set scrolloff=6
-set incsearch
 set ignorecase
 set smartcase
 set backspace=indent,eol,start
 set colorcolumn=80
 set expandtab
-set foldenable
 set foldlevel=2
-set foldmethod=manual
 set laststatus=2
 set number
 set relativenumber
 set shiftwidth=2
-set showcmd
 set smartindent
-set smarttab
 set splitright
 set tabstop=2
 set textwidth=80
@@ -40,15 +34,12 @@ let @i='oif err != nil {'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " save and escape
 nnoremap <Leader>s :w<CR>
-
 " quit and escape
 nnoremap <Leader>q :q<CR>
-
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
-
 nnoremap <C-f> :GFiles<CR>
-
+nnoremap <Leader>t :GoTest<CR>
 nnoremap <Leader>v :Vex<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -68,6 +59,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate' }
     Plug 'nvim-treesitter/playground'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    Plug 'windwp/nvim-autopairs'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -75,7 +68,6 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='soft'
-
 colorscheme gruvbox
 set termguicolors
 
