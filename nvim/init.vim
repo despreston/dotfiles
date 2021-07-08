@@ -48,7 +48,6 @@ nnoremap <Leader>v :Vex<CR>
 call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
-    Plug 'itchyny/lightline.vim'
     Plug 'kshenoy/vim-signature'
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'tpope/vim-commentary'
@@ -61,6 +60,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'nvim-treesitter/playground'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'windwp/nvim-autopairs'
+    Plug 'hoob3rt/lualine.nvim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -70,16 +70,6 @@ let g:gruvbox_italic=1
 let g:gruvbox_contrast_dark='soft'
 colorscheme gruvbox
 set termguicolors
-
-let g:lightline = {
-      \ 'colorscheme': 'gruvbox',
-      \ 'component_function': {
-      \   'filename': 'LightLineFilename'
-      \ }
-      \ }
-function! LightLineFilename()
-  return expand('%')
-endfunction
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General visual setting overrides

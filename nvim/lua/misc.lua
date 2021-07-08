@@ -14,6 +14,14 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+-- Lualine setup
+require('lualine').setup{
+  options = {
+    icons_enabled = false,
+    theme = 'gruvbox',
+  }
+}
+
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys 
