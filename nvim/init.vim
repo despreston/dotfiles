@@ -3,17 +3,17 @@ set scrolloff=6
 set ignorecase
 set smartcase
 set backspace=indent,eol,start
-set colorcolumn=80
+set colorcolumn=100
 set expandtab
 set foldlevel=2
 set laststatus=2
 set number
 set relativenumber
-set shiftwidth=2
+set shiftwidth=4
 set smartindent
 set splitright
-set tabstop=2
-set textwidth=80
+set tabstop=4
+set textwidth=100
 set title
 set titlestring=%{expand(\"%:p:h\")}
 set guicursor=
@@ -39,6 +39,7 @@ nnoremap <Leader>q :q<CR>
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
 nnoremap <C-f> :GFiles<CR>
+nnoremap <Leader>h :History:<CR>
 nnoremap <Leader>t :GoTest<CR>
 nnoremap <Leader>v :Vex<CR>
 
@@ -50,7 +51,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf.vim'
     Plug 'kshenoy/vim-signature'
     Plug 'michaeljsmith/vim-indent-object'
-    Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
     Plug 'vimwiki/vimwiki'
     Plug 'zhaocai/GoldenView.Vim'
@@ -61,6 +61,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'windwp/nvim-autopairs'
     Plug 'hoob3rt/lualine.nvim'
+    Plug 'terrortylor/nvim-comment'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

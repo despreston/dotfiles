@@ -18,6 +18,7 @@ export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 # tanium corp vpn stuff
 export PATH=$PATH:$HOME/bin
 export VPN_USER=des.preston
+eval "$(direnv hook zsh)"
 
 ###############################################################################
 # Functions
@@ -54,6 +55,9 @@ DISABLE_AUTO_TITLE="true"
 # disable marking untracked files under VCS as dirty. This makes repository
 # status check for large repositories much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# for tanium shit
+CHILD_CURRENCY=1
 
 plugins=(
   git
@@ -92,5 +96,4 @@ alias tdash="tmux \
   send-keys -t 2 C-z 'showlogs horchdienst' Enter
 "
 
-# opam configuration
-test -r /Users/des/.opam/opam-init/init.zsh && . /Users/des/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

@@ -1,4 +1,5 @@
 require('nvim-autopairs').setup()
+require('nvim_comment').setup()
 
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
@@ -42,9 +43,6 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap=true, silent=true }
 
-  -- format Go files on save
-  -- vim.api.nvim_command("au BufWritePost *.go lua vim.lsp.buf.formatting()")
-
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
@@ -67,7 +65,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { "denols", "gopls" }
+local servers = { 'tsserver', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
