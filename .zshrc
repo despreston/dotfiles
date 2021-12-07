@@ -15,10 +15,14 @@ export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 
-# tanium corp vpn stuff
+# tanium
 export PATH=$PATH:$HOME/bin
 export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
+export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
+# for tanium shit
+CHILD_CURRENCY=1
+JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/
 
 ###############################################################################
 # Functions
@@ -56,9 +60,6 @@ DISABLE_AUTO_TITLE="true"
 # status check for large repositories much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# for tanium shit
-CHILD_CURRENCY=1
-
 plugins=(
   git
 )
@@ -79,6 +80,7 @@ alias gvim="git log | nvim -R -c 'set hidden nowrap keywordprg=:enew\ \|\ termin
 alias ls='ls -alG'
 alias tanium='dev && cd tanium'
 alias vim='nvim'
+alias dotfiles='cd ~/dotfiles'
 
 # start tmux w/ correct TERM
 alias tmux="TERM=xterm-256color-italic tmux"

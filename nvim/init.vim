@@ -18,9 +18,9 @@ set title
 set titlestring=%{expand(\"%:p:h\")}
 set guicursor=
 
-" after saving anything in ~/vimwiki, sync to rpi for backup
+" after saving anything in ~/vimwiki, sync for google drive for backup
 au! BufWritePost ~/vimwiki/* silent
-  \ execute "!rsync -avz ~/vimwiki/ des-pi:/home/des/vimwiki" |
+  \ execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
   \ redraw!
 
 " Go spacing
@@ -39,7 +39,7 @@ nnoremap <Leader>q :q<CR>
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
 nnoremap <C-f> :GFiles<CR>
-nnoremap <Leader>h :History:<CR>
+nnoremap <C-h> :History:<CR>
 nnoremap <Leader>t :GoTest<CR>
 nnoremap <Leader>v :Vex<CR>
 
@@ -57,7 +57,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'morhetz/gruvbox'
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate' }
-    Plug 'nvim-treesitter/playground'
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'windwp/nvim-autopairs'
     Plug 'hoob3rt/lualine.nvim'
