@@ -1,9 +1,6 @@
 # Open Slack
 alt - s : open -a Slack
 
-# Open Teams
-alt - t : open -a Microsoft\ Teams
-
 # Toggle floating
 shift + alt - f : yabai -m window --toggle float
 
