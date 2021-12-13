@@ -23,11 +23,13 @@ au! BufWritePost ~/vimwiki/* silent
   \ execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
   \ redraw!
 
+" Path of vimwiki files
+let g:vimwiki_list = [{'path' : '/Users/des/vimwiki'}]
+
 " Go spacing
 au Filetype go setl noet ts=4 sw=4
 
 let mapleader = "\<Space>"
-let @i='oif err != nil {'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remappings
@@ -38,8 +40,11 @@ nnoremap <Leader>s :w<CR>
 nnoremap <Leader>q :q<CR>
 " insert line and stay in normal mode
 nnoremap <Leader>o o<esc>
-nnoremap <C-f> :GFiles<CR>
-nnoremap <C-h> :History:<CR>
+nnoremap <C-f> :Telescope git_files<CR>
+nnoremap <Leader>g :Telescope live_grep<CR>
+nnoremap <Leader>r :Telescope lsp_references<CR>
+nnoremap <Leader>m :Telescope marks<CR>
+nnoremap <Leader>h :Telescope command_history<CR>
 nnoremap <Leader>t :GoTest<CR>
 nnoremap <Leader>v :Vex<CR>
 
@@ -47,8 +52,6 @@ nnoremap <Leader>v :Vex<CR>
 " Plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
-    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-    Plug 'junegunn/fzf.vim'
     Plug 'kshenoy/vim-signature'
     Plug 'michaeljsmith/vim-indent-object'
     Plug 'tpope/vim-surround'
@@ -61,6 +64,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'windwp/nvim-autopairs'
     Plug 'hoob3rt/lualine.nvim'
     Plug 'terrortylor/nvim-comment'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -76,22 +81,11 @@ set termguicolors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " color of the marks in the vimgutter
 hi SignatureMarkText guifg=#ffcb6b
-
 " Don't highlight search results after searching.
 hi Search NONE
-
 " color of line number that cursor is on
 hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64 
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Settings for vimwiki
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Path of vimwiki files
-let g:vimwiki_list = [{'path' : '/Users/des/vimwiki'}]
-
-"----------------------------------------------------------------------
-" Neovim
-"----------------------------------------------------------------------
 if has("nvim")
     lua require("misc")
 endif
