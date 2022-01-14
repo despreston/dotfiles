@@ -21,7 +21,7 @@ export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
 export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
 # for tanium shit
-CHILD_CURRENCY=1
+CHILD_CONCURRENCY=1
 JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/
 
 ###############################################################################

@@ -9,10 +9,10 @@ set foldlevel=2
 set laststatus=2
 set number
 set relativenumber
-set shiftwidth=4
+set shiftwidth=2
 set smartindent
 set splitright
-set tabstop=4
+set tabstop=2
 set textwidth=100
 set title
 set titlestring=%{expand(\"%:p:h\")}
