@@ -1,3 +1,76 @@
+vim.opt.scrolloff = 6
+vim.opt.swapfile = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.backspace = 'indent,eol,start'
+vim.opt.colorcolumn = '100'
+vim.opt.expandtab = true
+vim.opt.laststatus = 2
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.shiftwidth = 2
+vim.opt.smartindent = true
+vim.opt.splitright = true
+vim.opt.tabstop = 2
+vim.opt.textwidth = 100
+vim.opt.title = false
+-- vim.opt.titlestring = '%{expand(\"%:p:h\")}' disabled until i can figure out how to fix it
+vim.opt.guicursor = ''
+
+vim.g.mapleader = ' '
+vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
+
+vim.api.nvim_set_keymap('n', '<Leader>s', ':w<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope git_files<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>g', ':Telescope live_grep<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>r', ':Telescope lsp_references<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
+
+-- after saving anything in ~/vimwiki, sync for google drive for backup
+vim.api.nvim_command([[
+  au! BufWritePost ~/vimwiki/* silent
+    \ execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
+    \ redraw!
+]])
+
+-- Go spacing
+vim.api.nvim_command([[
+  au Filetype go setl noet ts=4 sw=4
+]])
+
+-- PLUGIN STUFF
+vim.cmd('packadd paq-nvim')
+require 'paq' {
+  {'savq/paq-nvim', opt = true};
+  'nvim-treesitter/nvim-treesitter';
+  'kshenoy/vim-signature';
+  'michaeljsmith/vim-indent-object';
+  'tpope/vim-surround';
+  'vimwiki/vimwiki';
+  'zhaocai/GoldenView.Vim';
+  'morhetz/gruvbox';
+  'neovim/nvim-lspconfig';
+  'nvim-treesitter/nvim-treesitter';
+  'fatih/vim-go';
+  'windwp/nvim-autopairs';
+  'hoob3rt/lualine.nvim';
+  'terrortylor/nvim-comment';
+  'nvim-lua/plenary.nvim';
+  'nvim-telescope/telescope.nvim';
+}
+
+vim.g.gruvbox_italic = 1
+vim.g.gruvbox_contrast_dark = 'soft'
+vim.cmd('colorscheme gruvbox')
+vim.cmd('set termguicolors')
+vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
+vim.cmd('hi Search NONE')
+vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
+
 require('nvim-autopairs').setup()
 require('nvim_comment').setup()
 
@@ -65,3 +138,4 @@ local servers = { 'tsserver', 'gopls', 'rust_analyzer' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+
