@@ -20,20 +20,12 @@ export PATH=$PATH:$HOME/bin
 export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
 export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
-# for tanium shit
-CHILD_CONCURRENCY=1
-JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/
 
 ###############################################################################
 # Functions
 ###############################################################################
-# set terminal title
 function repo_name {
   git remote -v 2> /dev/null | head -n1 | awk '{print $2}' | sed 's/.*\///' | sed 's/\.git//'
-}
-
-function precmd {
-  echo -ne "\033]0;$(repo_name)\007"
 }
 
 function deployoperator {
@@ -42,15 +34,14 @@ function deployoperator {
   echo 'Starting Operator...' && ssh -t des-pi 'sudo service operator start'
 }
 
-###############################################################################
-# Misc
-###############################################################################
-
 # Show aws logs using awslogs
-showlogs() {
+function showlogs() {
   awslogs get /aws/lambda/$1 ALL --watch
 }
 
+###############################################################################
+# Misc
+###############################################################################
 ZSH_THEME="robbyrussell"
 
 # disable auto-setting terminal title.
@@ -72,11 +63,9 @@ source $HOME/.fzf.zsh
 ##############################################################################
 alias dev="cd $HOME/dev"
 alias zshconfig="$EDITOR ~/.zshrc"
-alias nvimconfig="$EDITOR ~/.config/nvim/init.vim"
+alias nvimconfig="$EDITOR ~/.config/nvim/init.lua"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
-# Git log, but by pressing K on SHAs, you can view the actual diff.
-alias gvim="git log | nvim -R -c 'set hidden nowrap keywordprg=:enew\ \|\ terminal\ \git\ --no-pager\ show | nnoremap q :bd!<cr>' -"
 alias ls='ls -alG'
 alias tanium='dev && cd tanium'
 alias vim='nvim'

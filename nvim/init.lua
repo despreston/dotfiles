@@ -20,6 +20,7 @@ vim.opt.guicursor = ''
 vim.g.mapleader = ' '
 vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
 
+vim.api.nvim_set_keymap('n', '<Leader>o', 'o<esc>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>s', ':w<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope git_files<CR>', {noremap = true})
@@ -79,11 +80,11 @@ require('nvim-treesitter.configs').setup {
   highlight = {
     enable = true,
     custom_captures = {
-      ["punctuation.bracket"] = "none",
-      ["property"] = "none",
-      ["parameter"] = "none",
-      ["method"] = "none",
-      ["constant.builtin"] = "Constant",
+      ['punctuation.bracket'] = 'none',
+      ['property'] = 'none',
+      ['parameter'] = 'none',
+      ['method'] = 'none',
+      ['constant.builtin'] = 'Constant',
     },
   },
 }
