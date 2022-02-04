@@ -43,11 +43,6 @@ vim.api.nvim_command([[
   au Filetype go setl noet ts=4 sw=4
 ]])
 
--- Formatting
-vim.api.nvim_command([[
-  au! BufWritePre * undojoin | Neoformat
-]])
-
 -- PLUGIN STUFF
 vim.cmd('packadd paq-nvim')
 require 'paq' {
@@ -62,7 +57,6 @@ require 'paq' {
   'neovim/nvim-lspconfig';
   'nvim-treesitter/nvim-treesitter';
   'fatih/vim-go';
-  'sbdchd/neoformat',
   'hoob3rt/lualine.nvim';
   'terrortylor/nvim-comment';
   'nvim-lua/plenary.nvim';
