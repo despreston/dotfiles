@@ -13,9 +13,8 @@ vim.opt.smartindent = true
 vim.opt.splitright = true
 vim.opt.tabstop = 2
 vim.opt.textwidth = 100
-vim.opt.title = false
--- vim.opt.titlestring = '%{expand(\"%:p:h\")}' disabled until i can figure out how to fix it
 vim.opt.guicursor = ''
+vim.opt.completeopt = 'menu'
 
 vim.g.mapleader = ' '
 vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
@@ -30,6 +29,7 @@ vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = tru
 vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>vs', ':Sex<CR>', {noremap = true})
 
 -- after saving anything in ~/vimwiki, sync for google drive for backup
 vim.api.nvim_command([[
@@ -41,6 +41,11 @@ vim.api.nvim_command([[
 -- Go spacing
 vim.api.nvim_command([[
   au Filetype go setl noet ts=4 sw=4
+]])
+
+-- Formatting
+vim.api.nvim_command([[
+  au! BufWritePre * undojoin | Neoformat
 ]])
 
 -- PLUGIN STUFF
@@ -57,7 +62,7 @@ require 'paq' {
   'neovim/nvim-lspconfig';
   'nvim-treesitter/nvim-treesitter';
   'fatih/vim-go';
-  'windwp/nvim-autopairs';
+  'sbdchd/neoformat',
   'hoob3rt/lualine.nvim';
   'terrortylor/nvim-comment';
   'nvim-lua/plenary.nvim';
@@ -72,7 +77,6 @@ vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
 vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
 
-require('nvim-autopairs').setup()
 require('nvim_comment').setup()
 
 -- Treesitter setup
@@ -115,6 +119,7 @@ local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+  vim.api.nvim_buf_set_option(0, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
   local opts = { noremap=true, silent=true }
