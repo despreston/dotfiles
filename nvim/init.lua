@@ -29,7 +29,7 @@ vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = tru
 vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Leader>vs', ':Sex<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 
 -- after saving anything in ~/vimwiki, sync for google drive for backup
 vim.api.nvim_command([[
