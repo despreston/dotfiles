@@ -34,13 +34,13 @@ vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 -- after saving anything in ~/vimwiki, sync for google drive for backup
 vim.api.nvim_command([[
   au! BufWritePost ~/vimwiki/* silent
-    \ execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
-    \ redraw!
+    execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
+    redraw!
 ]])
 
 -- Go spacing
 vim.api.nvim_command([[
-  au Filetype go setl noet ts=4 sw=4
+  au Filetype go,proto setl noet ts=4 sw=4
 ]])
 
 -- PLUGIN STUFF
@@ -63,7 +63,6 @@ require 'paq' {
   'nvim-telescope/telescope.nvim';
 }
 
-vim.g.gruvbox_italic = 1
 vim.g.gruvbox_contrast_dark = 'soft'
 vim.cmd('colorscheme gruvbox')
 vim.cmd('set termguicolors')
