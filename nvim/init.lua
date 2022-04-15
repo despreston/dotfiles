@@ -18,13 +18,14 @@ vim.opt.completeopt = 'menu'
 
 vim.g.mapleader = ' '
 vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
+vim.g.go_fmt_fail_silently = 1
 
 vim.api.nvim_set_keymap('n', '<Leader>o', 'o<esc>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>s', ':w<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope git_files<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>g', ':Telescope live_grep<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Leader>r', ':Telescope lsp_references<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>u', ':Telescope lsp_references<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
@@ -40,7 +41,7 @@ vim.api.nvim_command([[
 
 -- Go spacing
 vim.api.nvim_command([[
-  au Filetype go,proto setl noet ts=4 sw=4
+  au Filetype go setl noet ts=4 sw=4
 ]])
 
 -- PLUGIN STUFF
@@ -124,7 +125,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
@@ -133,7 +134,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'tsserver', 'gopls', 'rust_analyzer' }
+local servers = { 'clangd', 'tsserver', 'gopls', 'rust_analyzer' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end

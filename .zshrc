@@ -7,6 +7,7 @@ export NVM_DIR="$HOME/.nvm"
 export ZSH="$HOME/.oh-my-zsh"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
+export PATH="/usr/local/opt/llvm/bin:$PATH"
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent
@@ -16,6 +17,7 @@ export PATH=$PATH:$HOME/bin
 export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
 export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
+source $HOME/dev/tanium/vpn/vpn.zsh
 
 ###############################################################################
 # Functions
@@ -33,6 +35,17 @@ function deployoperator {
 # Show aws logs using awslogs
 function showlogs() {
   awslogs get /aws/lambda/$1 ALL --watch
+}
+
+function keychain-environment-variable() {
+  security find-generic-password -w -a "${USER}" -D ENV -s "${1}"
+}
+
+function set-keychain-environment-variable() {
+  [[ -z "$1" ]] && return 1
+  read -r -s "?Enter Value for ${1}: " secret
+  [[ -z "$secret" ]] && return 1
+  security add-generic-password -U -a "${USER}" -D ENV -s "${1}" -w "${secret}"
 }
 
 ###############################################################################
