@@ -1,6 +1,7 @@
 ##############################################################################
 # Env Vars
 ##############################################################################
+export PATH=$(pyenv root)/shims:$PATH
 export EDITOR=nvim
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -30,11 +31,6 @@ function deployoperator {
   echo 'Stopping Operator...' && ssh -t des-pi 'sudo service operator stop' && \
   echo 'Transferring...' && scp bin/operator des-pi:/home/operator/operator && \
   echo 'Starting Operator...' && ssh -t des-pi 'sudo service operator start'
-}
-
-# Show aws logs using awslogs
-function showlogs() {
-  awslogs get /aws/lambda/$1 ALL --watch
 }
 
 function keychain-environment-variable() {
@@ -93,7 +89,7 @@ alias tdash="tmux \
   splitw -v \; \
   send-keys -t 0 C-z 'vw' Enter \; \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
-  send-keys -t 2 C-z 'showlogs horchdienst' Enter
 "
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+eval "$(pyenv init -)"

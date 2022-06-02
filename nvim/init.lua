@@ -14,7 +14,7 @@ vim.opt.splitright = true
 vim.opt.tabstop = 2
 vim.opt.textwidth = 100
 vim.opt.guicursor = ''
-vim.opt.completeopt = 'menu'
+vim.opt.completeopt = 'menuone'
 
 vim.g.mapleader = ' '
 vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
@@ -138,4 +138,17 @@ local servers = { 'clangd', 'tsserver', 'gopls', 'rust_analyzer' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+
+nvim_lsp.vuels.setup {
+  on_attach = on_attach,
+  init_options = {
+    config = {
+      vetur = {
+        validation = {
+          script = false
+        }
+      }
+    }
+  }
+}
 
