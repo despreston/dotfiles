@@ -18,6 +18,7 @@ export PATH=$PATH:$HOME/bin
 export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
 export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
+export TANIUM_BASE_DIR=~/dev/tanium/go.git/main/.dev-files
 source $HOME/dev/tanium/vpn/vpn.zsh
 
 ###############################################################################
