@@ -34,16 +34,21 @@ vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
 
 -- after saving anything in ~/vimwiki, sync for google drive for backup
-vim.api.nvim_command([[
-  au! BufWritePost ~/vimwiki/* silent
-    execute "!rclone sync ~/vimwiki/ google-drive:vimwiki/" |
-    redraw!
-]])
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "~/vimwiki/*",
+  command = "execute '!rclone sync ~/vimwiki/ google-drive:vimwiki/' redraw!",
+})
+
+-- format on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  command = "lua vim.lsp.buf.format()",
+})
 
 -- Go spacing
-vim.api.nvim_command([[
-  au Filetype go setl noet ts=4 sw=4
-]])
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  command = "setl noet ts=4 sw=4",
+})
 
 -- PLUGIN STUFF
 vim.cmd('packadd paq-nvim')
@@ -124,10 +129,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
