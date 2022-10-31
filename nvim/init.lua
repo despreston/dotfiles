@@ -14,7 +14,7 @@ vim.opt.splitright = true
 vim.opt.tabstop = 2
 vim.opt.textwidth = 100
 vim.opt.guicursor = ''
-vim.opt.completeopt = 'menuone'
+vim.opt.completeopt = 'menu,menuone,noselect'
 
 vim.g.mapleader = ' '
 vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
@@ -39,11 +39,6 @@ vim.api.nvim_create_autocmd("BufWritePost", {
   command = "execute '!rclone sync ~/vimwiki/ google-drive:vimwiki/' redraw!",
 })
 
--- format on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  command = "lua vim.lsp.buf.format()",
-})
-
 -- Go spacing
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "go",
@@ -54,6 +49,11 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.cmd('packadd paq-nvim')
 require 'paq' {
   {'savq/paq-nvim', opt = true};
+  'hrsh7th/nvim-cmp';
+  'hrsh7th/cmp-buffer';
+  'hrsh7th/cmp-path';
+  'hrsh7th/cmp-nvim-lsp';
+  'L3MON4D3/LuaSnip';
   'nvim-treesitter/nvim-treesitter';
   'kshenoy/vim-signature';
   'michaeljsmith/vim-indent-object';
@@ -65,7 +65,6 @@ require 'paq' {
   'nvim-treesitter/nvim-treesitter';
   'fatih/vim-go';
   'hoob3rt/lualine.nvim';
-  'terrortylor/nvim-comment';
   'nvim-lua/plenary.nvim';
   'nvim-telescope/telescope.nvim';
 }
@@ -77,8 +76,6 @@ vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
 vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
 
-require('nvim_comment').setup()
-
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
   highlight = {
@@ -87,7 +84,6 @@ require('nvim-treesitter.configs').setup {
       ['punctuation.bracket'] = 'none',
       ['property'] = 'none',
       ['parameter'] = 'none',
-      ['method'] = 'none',
       ['constant.builtin'] = 'Constant',
     },
   },
@@ -112,6 +108,30 @@ require('lualine').setup{
   }
 }
 
+-- setup nvim-cmp
+local cmp = require('cmp')
+local select_opts = {behavior = cmp.SelectBehavior.Select}
+cmp.setup {
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+    end
+  },
+  sources = {
+    {name = 'path'},
+    {name = 'buffer', keyword_length = 3},
+    {name = 'nvim_lsp', keyword_length = 3},
+    {name = 'luasnip', keyword_length = 2},
+  },
+  mapping = {
+    ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item()),
+    ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item()),
+  }
+}
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys 
@@ -132,6 +152,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and

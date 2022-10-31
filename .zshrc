@@ -19,6 +19,7 @@ export VPN_USER=des.preston
 eval "$(direnv hook zsh)"
 export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
 export TANIUM_BASE_DIR=~/dev/tanium/go.git/main/.dev-files
+export TANIUM=~/dev/tanium
 source $HOME/dev/tanium/vpn/vpn.zsh
 
 ###############################################################################
@@ -43,6 +44,10 @@ function set-keychain-environment-variable() {
   read -r -s "?Enter Value for ${1}: " secret
   [[ -z "$secret" ]] && return 1
   security add-generic-password -U -a "${USER}" -D ENV -s "${1}" -w "${secret}"
+}
+
+function gdiff() {
+  git log --oneline | fzf --preview 'git diff {1}..{1}~1 --color=always'
 }
 
 ###############################################################################
@@ -73,7 +78,7 @@ alias nvimconfig="$EDITOR ~/.config/nvim/init.lua"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
-alias tanium='dev && cd tanium'
+alias tan='cd $TANIUM'
 alias vim='nvim'
 alias dotfiles='cd ~/dotfiles'
 
