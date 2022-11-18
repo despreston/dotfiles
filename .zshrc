@@ -1,7 +1,6 @@
 ##############################################################################
 # Env Vars
 ##############################################################################
-export PATH=$(pyenv root)/shims:$PATH
 export EDITOR=nvim
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -11,16 +10,7 @@ export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 export GPG_TTY=$(tty)
-gpgconf --launch gpg-agent
-
-# tanium
-export PATH=$PATH:$HOME/bin
-export VPN_USER=des.preston
-eval "$(direnv hook zsh)"
-export TANIUM_COMPOSE_PATH=~/dev/tanium/compose
-export TANIUM_BASE_DIR=~/dev/tanium/go.git/main/.dev-files
-export TANIUM=~/dev/tanium
-source $HOME/dev/tanium/vpn/vpn.zsh
+# gpgconf --launch gpg-agent
 
 ###############################################################################
 # Functions
@@ -78,7 +68,6 @@ alias nvimconfig="$EDITOR ~/.config/nvim/init.lua"
 alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
-alias tan='cd $TANIUM'
 alias vim='nvim'
 alias dotfiles='cd ~/dotfiles'
 
@@ -96,6 +85,4 @@ alias tdash="tmux \
   send-keys -t 0 C-z 'vw' Enter \; \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
 "
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-eval "$(pyenv init -)"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

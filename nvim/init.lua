@@ -63,7 +63,6 @@ require 'paq' {
   'morhetz/gruvbox';
   'neovim/nvim-lspconfig';
   'nvim-treesitter/nvim-treesitter';
-  'fatih/vim-go';
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
   'nvim-telescope/telescope.nvim';
@@ -112,6 +111,7 @@ require('lualine').setup{
 local cmp = require('cmp')
 local select_opts = {behavior = cmp.SelectBehavior.Select}
 cmp.setup {
+  preselect = cmp.PreselectMode.None,
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
