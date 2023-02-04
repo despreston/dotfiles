@@ -17,7 +17,6 @@ vim.opt.guicursor = ''
 vim.opt.completeopt = 'menu,menuone,noselect'
 
 vim.g.mapleader = ' '
-vim.g.vimwiki_list = {{path = '/Users/des/vimwiki'}}
 vim.g.go_fmt_fail_silently = 1
 
 vim.api.nvim_set_keymap('n', '<Leader>o', 'o<esc>', {noremap = true})
@@ -32,12 +31,6 @@ vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
-
--- after saving anything in ~/vimwiki, sync for google drive for backup
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "~/vimwiki/*",
-  command = "execute '!rclone sync ~/vimwiki/ google-drive:vimwiki/' redraw!",
-})
 
 -- Go spacing
 vim.api.nvim_create_autocmd("FileType", {
@@ -58,13 +51,14 @@ require 'paq' {
   'kshenoy/vim-signature';
   'michaeljsmith/vim-indent-object';
   'tpope/vim-surround';
-  'vimwiki/vimwiki';
   'zhaocai/GoldenView.Vim';
   'morhetz/gruvbox';
   'neovim/nvim-lspconfig';
   'nvim-treesitter/nvim-treesitter';
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
+  'terrortylor/nvim-comment';
+  'andythigpen/nvim-coverage';
   'nvim-telescope/telescope.nvim';
 }
 
@@ -74,6 +68,9 @@ vim.cmd('set termguicolors')
 vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
 vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
+
+require('nvim_comment').setup()
+require("coverage").setup()
 
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {

@@ -20,9 +20,9 @@ function repo_name {
 }
 
 function deployoperator {
-  echo 'Stopping Operator...' && ssh -t des-pi 'sudo service operator stop' && \
-  echo 'Transferring...' && scp bin/operator des-pi:/home/operator/operator && \
-  echo 'Starting Operator...' && ssh -t des-pi 'sudo service operator start'
+  echo 'Stopping Operator...' && ssh -t root@des-pi 'systemctl stop operator.service' && \
+  echo 'Transferring...' && scp bin/operator root@des-pi:/home/operator/operator && \
+  echo 'Starting Operator...' && ssh -t root@des-pi 'systemctl start operator.service'
 }
 
 function keychain-environment-variable() {
