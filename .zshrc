@@ -71,9 +71,6 @@ alias ls='ls -alG'
 alias vim='nvim'
 alias dotfiles='cd ~/dotfiles'
 
-# start tmux w/ correct TERM
-alias tmux="TERM=xterm-256color-italic tmux"
-
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
 
