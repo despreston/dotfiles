@@ -70,6 +70,7 @@ alias gs='git status'
 alias ls='ls -alG'
 alias vim='nvim'
 alias dotfiles='cd ~/dotfiles'
+alias taskrunner='EXPERIMENTAL_TASKRUNNER_NEWTUI=0 taskrunner'
 
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
