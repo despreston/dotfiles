@@ -22,7 +22,7 @@ vim.g.go_fmt_fail_silently = 1
 vim.api.nvim_set_keymap('n', '<Leader>o', 'o<esc>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>s', ':w<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope git_files<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope find_files<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>g', ':Telescope live_grep<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>u', ':Telescope lsp_references<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = true})
@@ -58,8 +58,8 @@ require 'paq' {
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
   'terrortylor/nvim-comment';
-  'andythigpen/nvim-coverage';
   'nvim-telescope/telescope.nvim';
+  'gpanders/editorconfig.nvim';
 }
 
 vim.g.gruvbox_contrast_dark = 'soft'
@@ -70,7 +70,6 @@ vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
 
 require('nvim_comment').setup()
-require("coverage").setup()
 
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
@@ -158,6 +157,10 @@ local servers = { 'clangd', 'tsserver', 'gopls', 'rust_analyzer' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
+
+-- nvm.lsp.graphql.setup {
+--   command = 'graphql-lsp',
+-- }
 
 nvim_lsp.vuels.setup {
   on_attach = on_attach,
