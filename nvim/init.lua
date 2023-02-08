@@ -158,9 +158,13 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
--- nvm.lsp.graphql.setup {
---   command = 'graphql-lsp',
--- }
+nvim_lsp.graphql.setup {
+  on_attach = on_attach,
+  command = 'graphql-lsp',
+  filetypes = { 'typescript', 'typescriptreact', 'go', 'graphql' },
+  settings = { ['graphql-config.load.legacy'] = true },
+  initializationOptions = { ['graphql-config.load.legacy'] = true }
+}
 
 nvim_lsp.vuels.setup {
   on_attach = on_attach,
