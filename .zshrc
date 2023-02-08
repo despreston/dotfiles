@@ -65,7 +65,6 @@ source $HOME/.fzf.zsh
 alias dev="cd $HOME/dev"
 alias zshconfig="$EDITOR ~/.zshrc"
 alias nvimconfig="$EDITOR ~/.config/nvim/init.lua"
-alias vw='vim -c VimwikiIndex'
 alias gs='git status'
 alias ls='ls -alG'
 alias vim='nvim'
