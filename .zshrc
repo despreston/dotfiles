@@ -55,7 +55,7 @@ source $ZSH/oh-my-zsh.sh
 source $HOME/.fzf.zsh
 
 PROMPT='%{$fg[blue]%}$(whoami)@$(hostname -s)%{$reset_color%}'
-PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} %{$fg[red]%}($(git_current_branch))%{$reset_color%} '
+PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
 ##############################################################################
 # Aliases
