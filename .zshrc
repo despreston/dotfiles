@@ -8,9 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 export PATH="/usr/local/opt/llvm/bin:$PATH"
-export ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}(%{$fg[red]%}"
 export GPG_TTY=$(tty)
-# gpgconf --launch gpg-agent
 
 ###############################################################################
 # Functions
@@ -45,9 +43,6 @@ function gdiff() {
 ###############################################################################
 ZSH_THEME="robbyrussell"
 
-# disable auto-setting terminal title.
-DISABLE_AUTO_TITLE="true"
-
 # disable marking untracked files under VCS as dirty. This makes repository
 # status check for large repositories much, much faster.
 DISABLE_UNTRACKED_FILES_DIRTY="true"
@@ -58,6 +53,9 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 source $HOME/.fzf.zsh
+
+PROMPT='%{$fg[blue]%}$(whoami)@$(hostname -s)%{$reset_color%}'
+PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} %{$fg[red]%}($(git_current_branch))%{$reset_color%} '
 
 ##############################################################################
 # Aliases
@@ -70,6 +68,7 @@ alias ls='ls -alG'
 alias vim='nvim'
 alias dotfiles='cd ~/dotfiles'
 alias taskrunner='EXPERIMENTAL_TASKRUNNER_NEWTUI=0 taskrunner'
+alias ssh='TERM=$TERM ssh'
 
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
