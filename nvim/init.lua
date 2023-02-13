@@ -1,5 +1,4 @@
 vim.opt.scrolloff = 6
-vim.opt.swapfile = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.backspace = 'indent,eol,start'
@@ -54,12 +53,12 @@ require 'paq' {
   'zhaocai/GoldenView.Vim';
   'morhetz/gruvbox';
   'neovim/nvim-lspconfig';
-  'nvim-treesitter/nvim-treesitter';
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
   'terrortylor/nvim-comment';
   'nvim-telescope/telescope.nvim';
   'gpanders/editorconfig.nvim';
+  'nvim-treesitter/playground';
 }
 
 vim.g.gruvbox_contrast_dark = 'soft'
@@ -74,15 +73,15 @@ require('nvim_comment').setup()
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
   highlight = {
-    enable = true,
-    custom_captures = {
-      ['punctuation.bracket'] = 'none',
-      ['property'] = 'none',
-      ['parameter'] = 'none',
-      ['constant.builtin'] = 'Constant',
-    },
+    enable = true
   },
 }
+
+vim.api.nvim_set_hl(0, '@variable', { link = 'None' })
+vim.api.nvim_set_hl(0, '@property', { link = 'None' })
+vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
+vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
+vim.api.nvim_set_hl(0, '@field', { link = 'None' })
 
 -- Lualine setup
 require('lualine').setup{
