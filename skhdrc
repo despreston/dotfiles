@@ -11,10 +11,10 @@ alt - f : yabai -m window --toggle zoom-fullscreen
 shift + alt - 0 : yabai -m space --balance
 
 # float / unfloat window and center on screen
-shift + alt - c : yabai -m window --toggle float; yabai -m window --grid 4:4:1:0:2:4
+shift + alt - c : yabai -m window --toggle float; yabai -m window --grid 1:5:1:0:3:1
 
 # float / unfloat window and vertically center on screen
-shift + alt - v : yabai -m window --toggle float; yabai -m window --grid 4:4:0:1:4:2
+shift + alt - v : yabai -m window --toggle float; yabai -m window --grid 5:1:0:1:1:3
 
 # focus window
 alt - x : yabai -m window --focus recent
