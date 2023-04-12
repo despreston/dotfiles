@@ -13,6 +13,9 @@ shift + alt - 0 : yabai -m space --balance
 # float / unfloat window and center on screen
 shift + alt - c : yabai -m window --toggle float; yabai -m window --grid 4:4:1:0:2:4
 
+# float / unfloat window and vertically center on screen
+shift + alt - v : yabai -m window --toggle float; yabai -m window --grid 4:4:0:1:4:2
+
 # focus window
 alt - x : yabai -m window --focus recent
 alt - z : yabai -m window --focus stack.prev
