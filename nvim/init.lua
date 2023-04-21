@@ -31,12 +31,6 @@ vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
 
--- Go spacing
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "go",
-  command = "setl noet ts=4 sw=4",
-})
-
 -- PLUGIN STUFF
 vim.cmd('packadd paq-nvim')
 require 'paq' {
@@ -73,7 +67,8 @@ require('nvim_comment').setup()
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
   highlight = {
-    enable = true
+    enable = true,
+    disable = { "sql" },
   },
 }
 
@@ -82,6 +77,7 @@ vim.api.nvim_set_hl(0, '@property', { link = 'None' })
 vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
 vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
 vim.api.nvim_set_hl(0, '@field', { link = 'None' })
+vim.api.nvim_set_hl(0, '@parameter', { link = 'None' })
 
 -- Lualine setup
 require('lualine').setup{
@@ -160,10 +156,10 @@ end
 nvim_lsp.graphql.setup {
   on_attach = on_attach,
   command = 'graphql-lsp',
-  filetypes = { 'typescript', 'typescriptreact', 'go', 'graphql' },
+  filetypes = { 'typescript', 'typescriptreact', 'graphql' },
   settings = { ['graphql-config.load.legacy'] = true },
   initializationOptions = { ['graphql-config.load.legacy'] = true }
-}
+} 
 
 nvim_lsp.vuels.setup {
   on_attach = on_attach,
@@ -178,3 +174,9 @@ nvim_lsp.vuels.setup {
   }
 }
 
+vim.api.nvim_create_autocmd('BufWritePost', {
+  pattern = '*.go',
+  callback = function()
+    vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+  end
+})
