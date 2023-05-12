@@ -30,6 +30,9 @@ vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
+vim.keymap.set('n', '<leader>c', require('osc52').copy_operator, {expr = true})
+vim.keymap.set('n', '<leader>cc', '<leader>c_', {remap = true})
+vim.keymap.set('v', '<leader>c', require('osc52').copy_visual)
 
 -- PLUGIN STUFF
 vim.cmd('packadd paq-nvim')
@@ -52,7 +55,7 @@ require 'paq' {
   'terrortylor/nvim-comment';
   'nvim-telescope/telescope.nvim';
   'gpanders/editorconfig.nvim';
-  'nvim-treesitter/playground';
+  'ojroques/nvim-osc52';
 }
 
 vim.g.gruvbox_contrast_dark = 'soft'
@@ -174,7 +177,7 @@ nvim_lsp.vuels.setup {
   }
 }
 
-vim.api.nvim_create_autocmd('BufWritePost', {
+vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*.go',
   callback = function()
     vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })

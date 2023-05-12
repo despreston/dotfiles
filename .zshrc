@@ -5,8 +5,8 @@ export EDITOR=nvim
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export ZSH="$HOME/.oh-my-zsh"
-export GOPATH="/opt/homebrew/opt/go@1.18/bin"
-export PATH=$PATH:/usr/local/bin/go:$GOPATH
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 export GPG_TTY=$(tty)
 export DOTFILES="$HOME/dotfiles"
@@ -67,9 +67,9 @@ alias nvimconfig="$EDITOR $DOTFILES/.config/nvim/init.lua"
 alias gs='git status'
 alias ls='ls -alG'
 alias vim='nvim'
-alias dotfiles='cd ~/dotfiles'
+alias dotfiles='cd $DOTFILES'
 alias ssh='TERM=$TERM ssh'
-alias sam='cd ~/co/backend/go/src/samsaradev.io'
+alias sam="cd $HOME/co/backend/go/src/samsaradev.io"
 
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
