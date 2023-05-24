@@ -63,7 +63,7 @@ PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 ##############################################################################
 alias dev="cd $HOME/dev"
 alias zshconfig="$EDITOR $DOTFILES/.zshrc"
-alias nvimconfig="$EDITOR $DOTFILES/.config/nvim/init.lua"
+alias nvimconfig="$EDITOR $DOTFILES/nvim/init.lua"
 alias gs='git status'
 alias ls='ls -alG'
 alias vim='nvim'
