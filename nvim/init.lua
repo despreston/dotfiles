@@ -2,7 +2,7 @@ vim.opt.scrolloff = 6
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.backspace = 'indent,eol,start'
-vim.opt.colorcolumn = '100'
+vim.opt.colorcolumn = '80'
 vim.opt.expandtab = true
 vim.opt.laststatus = 2
 vim.opt.number = true
@@ -11,7 +11,7 @@ vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 vim.opt.splitright = true
 vim.opt.tabstop = 2
-vim.opt.textwidth = 100
+vim.opt.textwidth = 80
 vim.opt.guicursor = ''
 vim.opt.completeopt = 'menu,menuone,noselect'
 
@@ -23,19 +23,15 @@ vim.api.nvim_set_keymap('n', '<Leader>s', ':w<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-f>', ':Telescope find_files<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>g', ':Telescope live_grep<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>p', ':Telescope oldfiles<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>u', ':Telescope lsp_references<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Leader>m', ':Telescope marks<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Leader>t', ':GoTest<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
-vim.keymap.set('n', '<leader>c', require('osc52').copy_operator, {expr = true})
 vim.keymap.set('n', '<leader>cc', '<leader>c_', {remap = true})
-vim.keymap.set('v', '<leader>c', require('osc52').copy_visual)
 
 -- PLUGIN STUFF
-vim.cmd('packadd paq-nvim')
 require 'paq' {
   {'savq/paq-nvim', opt = true};
   'hrsh7th/nvim-cmp';
@@ -46,7 +42,6 @@ require 'paq' {
   'nvim-treesitter/nvim-treesitter';
   'kshenoy/vim-signature';
   'michaeljsmith/vim-indent-object';
-  'tpope/vim-surround';
   'zhaocai/GoldenView.Vim';
   'morhetz/gruvbox';
   'neovim/nvim-lspconfig';
@@ -54,9 +49,9 @@ require 'paq' {
   'nvim-lua/plenary.nvim';
   'terrortylor/nvim-comment';
   'nvim-telescope/telescope.nvim';
-  'gpanders/editorconfig.nvim';
-  'ojroques/nvim-osc52';
+  'editorconfig/editorconfig-vim';
 }
+
 
 vim.g.gruvbox_contrast_dark = 'soft'
 vim.cmd('colorscheme gruvbox')
@@ -155,14 +150,6 @@ local servers = { 'tsserver', 'gopls', 'rust_analyzer' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
-
-nvim_lsp.graphql.setup {
-  on_attach = on_attach,
-  command = 'graphql-lsp',
-  filetypes = { 'typescript', 'typescriptreact', 'graphql' },
-  settings = { ['graphql-config.load.legacy'] = true },
-  initializationOptions = { ['graphql-config.load.legacy'] = true }
-} 
 
 nvim_lsp.vuels.setup {
   on_attach = on_attach,
