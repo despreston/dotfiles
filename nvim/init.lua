@@ -14,6 +14,7 @@ vim.opt.tabstop = 2
 vim.opt.textwidth = 80
 vim.opt.guicursor = ''
 vim.opt.completeopt = 'menu,menuone,noselect'
+vim.opt.confirm = true
 
 vim.g.mapleader = ' '
 vim.g.go_fmt_fail_silently = 1
@@ -29,7 +30,6 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {nor
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
-vim.keymap.set('n', '<leader>cc', '<leader>c_', {remap = true})
 
 -- PLUGIN STUFF
 require 'paq' {
