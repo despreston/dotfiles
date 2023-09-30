@@ -70,6 +70,15 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+-- Telescope setup
+require('telescope').setup {
+  defaults = { 
+    file_ignore_patterns = { 
+      "*.lock" 
+    },
+  },
+}
+
 vim.api.nvim_set_hl(0, '@variable', { link = 'None' })
 vim.api.nvim_set_hl(0, '@property', { link = 'None' })
 vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })

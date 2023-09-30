@@ -2,8 +2,6 @@
 
 # float system preferences. Most of these just diable Yabai form resizing them.
 yabai -m rule --add app="^System Preferences$" sticky=on layer=above manage=off
-yabai -m rule --add app="^Karabiner-Elements$" sticky=on layer=above manage=off
-yabai -m rule --add app="^Karabiner-EventViewer$" sticky=on layer=above manage=off
 yabai -m rule --add app="^Messages$" manage=off
 yabai -m rule --add app="^Finder$" sticky=on layer=above manage=off
 yabai -m rule --add app="^Disk Utility$" sticky=on layer=above manage=off
@@ -13,7 +11,6 @@ yabai -m rule --add app="^Path Finder$" manage=off
 yabai -m rule --add app="^Spotify$" manage=off
 yabai -m rule --add app="^console$" manage=off
 yabai -m rule --add app="^Logi Options$" manage=off
-yabai -m rule --add app="^Cisco Webex Start$" manage=off
 yabai -m rule --add app="^Slack$" display=2 manage=off
 yabai -m rule --add app="econ-calendar" display=2 manage=off
 yabai -m rule --add app="deadlink" display=2

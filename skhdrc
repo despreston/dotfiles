@@ -25,5 +25,5 @@ alt - c : yabai -m window --focus stack.next
 alt - r : yabai -m space --rotate 90
 
 # send window to screen
-alt - n : yabai -m window --display next && yabai -m display --focus next
+alt - n : yabai -m window --display recent && yabai -m display --focus recent
 alt - p : yabai -m window --display prev && yabai -m display --focus prev
