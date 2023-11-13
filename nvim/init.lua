@@ -2,7 +2,7 @@ vim.opt.scrolloff = 6
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.backspace = 'indent,eol,start'
-vim.opt.colorcolumn = '80'
+vim.opt.colorcolumn = '100'
 vim.opt.expandtab = true
 vim.opt.laststatus = 2
 vim.opt.number = true
@@ -11,10 +11,11 @@ vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 vim.opt.splitright = true
 vim.opt.tabstop = 2
-vim.opt.textwidth = 80
+vim.opt.textwidth = 100
 vim.opt.guicursor = ''
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.confirm = true
+vim.opt.winwidth = 105
 
 vim.g.mapleader = ' '
 vim.g.go_fmt_fail_silently = 1
@@ -30,10 +31,24 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {nor
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-n>', '<C-W>w', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', '<C-W>p', { noremap = true, silent = true })
 
 -- PLUGIN STUFF
-require 'paq' {
-  {'savq/paq-nvim', opt = true};
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
   'hrsh7th/nvim-cmp';
   'hrsh7th/cmp-buffer';
   'hrsh7th/cmp-path';
@@ -42,16 +57,14 @@ require 'paq' {
   'nvim-treesitter/nvim-treesitter';
   'kshenoy/vim-signature';
   'michaeljsmith/vim-indent-object';
-  'zhaocai/GoldenView.Vim';
   'morhetz/gruvbox';
   'neovim/nvim-lspconfig';
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
   'terrortylor/nvim-comment';
   'nvim-telescope/telescope.nvim';
-  'editorconfig/editorconfig-vim';
-}
-
+  'rmagatti/auto-session';
+})
 
 vim.g.gruvbox_contrast_dark = 'soft'
 vim.cmd('colorscheme gruvbox')
@@ -61,6 +74,11 @@ vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
 
 require('nvim_comment').setup()
+
+require("auto-session").setup {
+  auto_session_enable_last_session = true,
+  auto_restore_enabled = true,
+}
 
 -- Treesitter setup
 require('nvim-treesitter.configs').setup {
@@ -76,6 +94,7 @@ require('telescope').setup {
     file_ignore_patterns = { 
       "*.lock" 
     },
+    layout_strategy = "vertical",
   },
 }
 
