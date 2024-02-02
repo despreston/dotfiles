@@ -160,19 +160,6 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-nvim_lsp.vuels.setup {
-  on_attach = on_attach,
-  init_options = {
-    config = {
-      vetur = {
-        validation = {
-          script = false
-        }
-      }
-    }
-  }
-}
-
 vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*.go',
   callback = function()
