@@ -11,11 +11,12 @@ vim.opt.shiftwidth = 2
 vim.opt.smartindent = true
 vim.opt.splitright = true
 vim.opt.tabstop = 2
-vim.opt.textwidth = 100
 vim.opt.guicursor = ''
 vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.confirm = true
 vim.opt.winwidth = 105
+vim.opt.clipboard = 'unnamedplus'
+vim.o.wrap = false
 
 vim.g.mapleader = ' '
 vim.g.go_fmt_fail_silently = 1
@@ -31,8 +32,8 @@ vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {nor
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<C-n>', '<C-W>w', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-p>', '<C-W>p', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-n>', '<C-W><Right>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-p>', '<C-W><Left>', { noremap = true, silent = true })
 
 -- PLUGIN STUFF
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -57,23 +58,22 @@ require("lazy").setup({
   'nvim-treesitter/nvim-treesitter';
   'kshenoy/vim-signature';
   'michaeljsmith/vim-indent-object';
-  'morhetz/gruvbox';
+  { 'ellisonleao/gruvbox.nvim', lazy = false };
   'neovim/nvim-lspconfig';
   'hoob3rt/lualine.nvim';
   'nvim-lua/plenary.nvim';
-  'terrortylor/nvim-comment';
   'nvim-telescope/telescope.nvim';
   'rmagatti/auto-session';
+  'github/copilot.vim';
 })
 
-vim.g.gruvbox_contrast_dark = 'soft'
-vim.cmd('colorscheme gruvbox')
-vim.cmd('set termguicolors')
+require("gruvbox").setup({
+  contrast = "soft"
+})
+vim.cmd("colorscheme gruvbox")
 vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
 vim.cmd('hi Search NONE')
 vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
-
-require('nvim_comment').setup()
 
 require("auto-session").setup {
   auto_session_enable_last_session = true,
@@ -95,15 +95,10 @@ require('telescope').setup {
       "*.lock" 
     },
     layout_strategy = "vertical",
+    dynamic_preview_title = true,
   },
 }
 
-vim.api.nvim_set_hl(0, '@variable', { link = 'None' })
-vim.api.nvim_set_hl(0, '@property', { link = 'None' })
-vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
-vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
-vim.api.nvim_set_hl(0, '@field', { link = 'None' })
-vim.api.nvim_set_hl(0, '@parameter', { link = 'None' })
 
 -- Lualine setup
 require('lualine').setup{
@@ -163,38 +158,38 @@ local on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.format()<CR>", opts)
 end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'tsserver', 'gopls', 'rust_analyzer' }
+local servers = { 'tsserver', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-nvim_lsp.vuels.setup {
-  on_attach = on_attach,
-  init_options = {
-    config = {
-      vetur = {
-        validation = {
-          script = false
-        }
-      }
-    }
-  }
-}
-
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.go',
-  callback = function()
-    vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("lsp", { clear = true }),
+  callback = function(args)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = args.buf,
+      callback = function()
+        vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+        vim.lsp.buf.format {async = false, id = args.data.client_id }
+      end,
+    })
   end
 })
+
+vim.api.nvim_set_hl(0, '@variable.parameter.go', { link = 'None' })
+vim.api.nvim_set_hl(0, '@variable.member.go', { link = 'None' })
+vim.api.nvim_set_hl(0, '@module.go', { link = 'None' })
+vim.api.nvim_set_hl(0, '@property', { link = 'None' })
+vim.api.nvim_set_hl(0, '@package', { link = 'None' })
+vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
+vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
+vim.api.nvim_set_hl(0, '@field', { link = 'None' })
+vim.api.nvim_set_hl(0, '@parameter', { link = 'None' })
