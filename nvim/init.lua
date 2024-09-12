@@ -65,6 +65,7 @@ require("lazy").setup({
   'nvim-telescope/telescope.nvim';
   'rmagatti/auto-session';
   'github/copilot.vim';
+  'prettier/vim-prettier';
 })
 
 require("gruvbox").setup({
@@ -98,7 +99,6 @@ require('telescope').setup {
     dynamic_preview_title = true,
   },
 }
-
 
 -- Lualine setup
 require('lualine').setup{
@@ -166,24 +166,45 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'tsserver', 'gopls' }
+local servers = { 'ts_ls', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp", { clear = true }),
-  callback = function(args)
-    vim.api.nvim_create_autocmd("BufWritePre", {
-      buffer = args.buf,
-      callback = function()
-        vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
-        vim.lsp.buf.format {async = false, id = args.data.client_id }
-      end,
-    })
+require'lspconfig'.ts_ls.setup{}
+
+-- Go: Run gofmt/gofmpt, import packages automatically on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
+  pattern = '*.go',
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { "source.organizeImports" } }
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
+    for _, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          vim.lsp.util.apply_workspace_edit(r.edit, "utf-16")
+        else
+          vim.lsp.buf.execute_command(r.command)
+        end
+      end
+    end
+  
+    vim.lsp.buf.format()
   end
 })
 
+-- tsx: Run prettier on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('runPrettier', { clear = true }),
+  pattern = '*.tsx',
+  callback = function()
+    vim.cmd('PrettierAsync')
+  end
+})
+
+-- Styling overrides
 vim.api.nvim_set_hl(0, '@variable.parameter.go', { link = 'None' })
 vim.api.nvim_set_hl(0, '@variable.member.go', { link = 'None' })
 vim.api.nvim_set_hl(0, '@module.go', { link = 'None' })
