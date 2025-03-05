@@ -49,96 +49,110 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-  'hrsh7th/nvim-cmp';
+  {
+    'ellisonleao/gruvbox.nvim',
+    lazy = false,
+    priority = 1000,
+    opts = { contrast = "soft" },
+    init = function()
+      vim.cmd("colorscheme gruvbox")
+      vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
+      vim.cmd('hi Search NONE')
+      vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
+      vim.api.nvim_set_hl(0, '@variable.parameter.go', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@variable.member.go', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@module.go', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@property', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@package', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@field', { link = 'None' })
+      vim.api.nvim_set_hl(0, '@parameter', { link = 'None' })
+    end
+  };
+  'L3MON4D3/LuaSnip';
+  {
+    'nvim-treesitter/nvim-treesitter',
+    opts = {
+      highlight = {
+        enable = true,
+        disable = { "sql" },
+      },
+    }
+  };
+  'kshenoy/vim-signature';
+  'michaeljsmith/vim-indent-object';
+  'neovim/nvim-lspconfig';
+  {
+    'hoob3rt/lualine.nvim',
+    opts = {
+      options = {
+        icons_enabled = false,
+        theme = 'gruvbox',
+      },
+      sections = {
+        lualine_b = {'branch'},
+        lualine_c = {
+          {
+            'filename',
+            file_status = true, -- displays file status (readonly status, modified status)
+            path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
+          }
+        },
+        lualine_x = {'filetype'},
+      }
+    }
+  };
+  'nvim-lua/plenary.nvim';
+  {
+    'nvim-telescope/telescope.nvim',
+    opts = {
+      defaults = { 
+        file_ignore_patterns = { 
+          "*.lock" 
+        },
+        layout_strategy = "vertical",
+        dynamic_preview_title = true,
+      }
+    }
+  };
+  {
+    'rmagatti/auto-session',
+    opts = {
+      auto_session_enable_last_session = true,
+      auto_restore_enabled = true,
+    }
+  };
+  'github/copilot.vim';
+  'prettier/vim-prettier';
+  {
+    'hrsh7th/nvim-cmp',
+    opts = function(_, opts)
+      local cmp = require('cmp')
+      return {
+        -- preselect = cmp.PreselectMode.None,
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end
+        },
+        sources = {
+          {name = 'path'},
+          {name = 'buffer', keyword_length = 3},
+          {name = 'nvim_lsp', keyword_length = 3},
+          {name = 'luasnip', keyword_length = 2},
+        },
+        mapping = {
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
+        }
+      }
+    end
+  };
   'hrsh7th/cmp-buffer';
   'hrsh7th/cmp-path';
   'hrsh7th/cmp-nvim-lsp';
-  'L3MON4D3/LuaSnip';
-  'nvim-treesitter/nvim-treesitter';
-  'kshenoy/vim-signature';
-  'michaeljsmith/vim-indent-object';
-  { 'ellisonleao/gruvbox.nvim', lazy = false };
-  'neovim/nvim-lspconfig';
-  'hoob3rt/lualine.nvim';
-  'nvim-lua/plenary.nvim';
-  'nvim-telescope/telescope.nvim';
-  'rmagatti/auto-session';
-  'github/copilot.vim';
-  'prettier/vim-prettier';
 })
-
-require("gruvbox").setup({
-  contrast = "soft"
-})
-vim.cmd("colorscheme gruvbox")
-vim.cmd('hi SignatureMarkText guifg=#ffcb6b')
-vim.cmd('hi Search NONE')
-vim.cmd('hi CursorLineNr term=bold ctermfg=10 gui=bold guifg=#7c6f64')
-
-require("auto-session").setup {
-  auto_session_enable_last_session = true,
-  auto_restore_enabled = true,
-}
-
--- Treesitter setup
-require('nvim-treesitter.configs').setup {
-  highlight = {
-    enable = true,
-    disable = { "sql" },
-  },
-}
-
--- Telescope setup
-require('telescope').setup {
-  defaults = { 
-    file_ignore_patterns = { 
-      "*.lock" 
-    },
-    layout_strategy = "vertical",
-    dynamic_preview_title = true,
-  },
-}
-
--- Lualine setup
-require('lualine').setup{
-  options = {
-    icons_enabled = false,
-    theme = 'gruvbox',
-  },
-  sections = {
-    lualine_b = {'branch'},
-    lualine_c = {
-      {
-        'filename',
-        file_status = true, -- displays file status (readonly status, modified status)
-        path = 1 -- 0 = just filename, 1 = relative path, 2 = absolute path
-      }
-    },
-    lualine_x = {'filetype'},
-  }
-}
-
--- setup nvim-cmp
-local cmp = require('cmp')
-local select_opts = {behavior = cmp.SelectBehavior.Select}
-cmp.setup {
-  preselect = cmp.PreselectMode.None,
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end
-  },
-  sources = {
-    {name = 'path'},
-    {name = 'buffer', keyword_length = 3},
-    {name = 'nvim_lsp', keyword_length = 3},
-    {name = 'luasnip', keyword_length = 2},
-  },
-  mapping = {
-    ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item()),
-    ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item()),
-  }
-}
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -187,7 +201,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
         end
       end
     end
-  
     vim.lsp.buf.format()
   end
 })
@@ -201,13 +214,3 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
--- Styling overrides
-vim.api.nvim_set_hl(0, '@variable.parameter.go', { link = 'None' })
-vim.api.nvim_set_hl(0, '@variable.member.go', { link = 'None' })
-vim.api.nvim_set_hl(0, '@module.go', { link = 'None' })
-vim.api.nvim_set_hl(0, '@property', { link = 'None' })
-vim.api.nvim_set_hl(0, '@package', { link = 'None' })
-vim.api.nvim_set_hl(0, '@constant.builtin', { link = 'None' })
-vim.api.nvim_set_hl(0, '@namespace', { link = 'None' })
-vim.api.nvim_set_hl(0, '@field', { link = 'None' })
-vim.api.nvim_set_hl(0, '@parameter', { link = 'None' })
