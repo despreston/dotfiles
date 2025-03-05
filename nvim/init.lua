@@ -31,7 +31,6 @@ vim.api.nvim_set_keymap('n', '<Leader>u', ':Telescope lsp_references<CR>', {nore
 vim.api.nvim_set_keymap('n', '<Leader>h', ':Telescope command_history<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>v', ':Vex<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>x', ':Ex<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<Leader>b', ':!gh browse %<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-n>', '<C-W><Right>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-p>', '<C-W><Left>', { noremap = true, silent = true })
 
@@ -170,8 +169,6 @@ local servers = { 'ts_ls', 'gopls' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
-
-require'lspconfig'.ts_ls.setup{}
 
 -- Go: Run gofmt/gofmpt, import packages automatically on save
 vim.api.nvim_create_autocmd('BufWritePre', {
