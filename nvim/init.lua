@@ -130,7 +130,7 @@ require("lazy").setup({
     opts = function(_, opts)
       local cmp = require('cmp')
       return {
-        -- preselect = cmp.PreselectMode.None,
+        preselect = cmp.PreselectMode.None,
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -143,8 +143,8 @@ require("lazy").setup({
           {name = 'luasnip', keyword_length = 2},
         },
         mapping = {
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
+          ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item()),
+          ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item()),
         }
       }
     end
@@ -152,6 +152,29 @@ require("lazy").setup({
   'hrsh7th/cmp-buffer';
   'hrsh7th/cmp-path';
   'hrsh7th/cmp-nvim-lsp';
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
+    opts = {
+      provider = "copilot",
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      {
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+      },
+    },
+  }
 })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -214,3 +237,10 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   end
 })
 
+-- Treesitter setup
+require('nvim-treesitter.configs').setup {
+  highlight = {
+    enable = true,
+    disable = { "sql" },
+  },
+}
