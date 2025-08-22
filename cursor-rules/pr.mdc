@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Pull Request Creation Rules
+
+## Template Compliance
+
+- **ALL pull requests MUST follow the template** located at `.github/PULL_REQUEST_TEMPLATE.md`.
+- Do not modify or add additional checkboxes to the "How did I test this?" section.
+- Only use the existing checkboxes that are already defined in the template.
+
+## PR Creation Requirements
+
+- **MUST use GitHub MCP**: All pull requests MUST be created using the GitHub MCP (Model Context Protocol) tools.
+- **Test coverage as comment**: Test coverage reports MUST be added as a comment to the PR after it is created, not in the initial PR description.
+
+## Description Guidelines
+
+- **Target audience**: Other software engineers at the same company.
+- **Style**: Concise and clear descriptions.
+- **Focus**: Explain the problem, solution, and testing approach without unnecessary verbosity.
+
+## Test Coverage Requirements
+
+### For Go Files (*.go)
+
+When changes are made to Go files, you MUST generate a test coverage report that includes:
+
+1. **Percentage test coverage** for the changed lines
+2. **List of covered scenarios** with specific line numbers
+3. **List of scenarios NOT covered** by tests
+4. **Coverage report summary** explaining what the coverage means
+
+### Coverage Report Format
+
+Use this exact format for Go file changes. This report should be added as a comment to the PR after creation:
+
+```
+_generated from cursor_
+
+## 📊 Coverage Report Summary
+
+I've successfully generated a coverage report for our changes. Here's what we've achieved:
+
+### ✅ **Test Coverage: [X]%** for [function/component name]
+
+Our test now covers the following scenarios:
+
+1. **✅ [Scenario description]** (lines [X-Y])
+   - [What the test verifies]
+   - [Expected behavior]
+
+2. **✅ [Another scenario]** (lines [X-Y])
+   - [What the test verifies]
+   - [Expected behavior]
+
+### 🎯 **What This Means:**
+
+[Explanation of what the coverage percentage means for the specific changes]
+
+### **Test Results:**
+[Summary of test execution results]
+```
+
+## Code Review Standards
+
+- Ensure all code follows the established style guidelines.
+- Verify that tests are comprehensive and meaningful.
+- Confirm that the PR description clearly explains the changes and reasoning.
