@@ -3,7 +3,16 @@
 ##############################################################################
 export EDITOR=nvim
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Lazy-load nvm — only sourced on first use of nvm/node/npm/npx
+_load_nvm() {
+  unset -f nvm node npm npx
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+}
+for cmd in nvm node npm npx; do
+  eval "${cmd}() { _load_nvm; ${cmd} \"\$@\"; }"
+done
 export ZSH="$HOME/.oh-my-zsh"
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
@@ -83,5 +92,4 @@ alias tdash="tmux \
   send-keys -t 0 C-z 'vw' Enter \; \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
 "
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 eval "$(direnv hook zsh)"
