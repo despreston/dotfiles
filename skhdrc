@@ -1,6 +1,9 @@
 # Open Slack
 alt - s : open -a Slack
 
+# Open Cursor
+alt - c : open -b com.todesktop.230313mzl4w4u92
+
 # Toggle floating
 shift + alt - f : yabai -m window --toggle float
 
