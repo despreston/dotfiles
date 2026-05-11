@@ -4,20 +4,20 @@
 export EDITOR=nvim
 export NVM_DIR="$HOME/.nvm"
 
-# Lazy-load nvm — only sourced on first use of nvm/node/npm/npx
-_load_nvm() {
+# Lazy-load nvm — only sources nvm.sh on first use of nvm/node/npm/npx
+nvm() {
   unset -f nvm node npm npx
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  nvm "$@"
 }
-for cmd in nvm node npm npx; do
-  eval "${cmd}() { _load_nvm; ${cmd} \"\$@\"; }"
-done
+node() { nvm --version >/dev/null 2>&1; unset -f node; node "$@"; }
+npm()  { nvm --version >/dev/null 2>&1; unset -f npm;  npm "$@"; }
+npx()  { nvm --version >/dev/null 2>&1; unset -f npx;  npx "$@"; }
 export ZSH="$HOME/.oh-my-zsh"
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/bin/go:$GOPATH/bin
+export GOPATH="/opt/homebrew/opt/go@1.20/bin"
+export PATH=$PATH:/usr/local/bin/go:$GOPATH
 export PATH="/usr/local/opt/llvm/bin:$PATH"
-export PATH="/usr/local/bin/sam:$PATH"
 export GPG_TTY=$(tty)
 export DOTFILES="$HOME/dotfiles"
 
@@ -65,7 +65,7 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 source $HOME/.fzf.zsh
 
-PROMPT='%{$fg[blue]%}$(whoami)@$(hostname -s)%{$reset_color%}'
+PROMPT='%{$fg[blue]%}%n@%m%{$reset_color%}'
 PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
 ##############################################################################
@@ -77,9 +77,10 @@ alias nvimconfig="$EDITOR $DOTFILES/nvim/init.lua"
 alias gs='git status'
 alias ls='ls -alG'
 alias vim='nvim'
-alias dotfiles='cd $DOTFILES'
+alias dotfiles='cd ~/dotfiles'
 alias ssh='TERM=$TERM ssh'
-alias samhome="cd $HOME/co/backend/go/src/samsaradev.io"
+alias sam='cd ~/co/backend/go/src/samsaradev.io'
+alias d='devbox'
 
 # tmux: split-window vertically, resize right pane to 80
 alias tdev="tmux splitw -h -l 80\; send-keys -t 0 'vim .' Enter"
@@ -92,4 +93,21 @@ alias tdash="tmux \
   send-keys -t 0 C-z 'vw' Enter \; \
   send-keys -t 1 C-z 'ssh des-pi journalctl -u operator.service -f' Enter \; \
 "
+
+##############################################################################
+# Codex mac app + devbox project sync (Derek Bolt)
+# https://github.com/samsara-dev/homedir/blob/633781758a26ef679cc27fed782d44ca2f66c9b2/users/dbolt/dotfiles/zsh_aliases#L138-L147
+##############################################################################
+function dcodex() {
+  codex-devbox-project "$@"
+}
+
+function _cmpl_dcodex {
+  local a
+  read -cA a
+  (( ${#a} <= 2 )) && reply=(sync)
+}
+compctl -K _cmpl_dcodex dcodex codex-devbox-project
+
 eval "$(direnv hook zsh)"
+export PATH="$HOME/.local/bin:$HOME/bin:/Applications/Codex.app/Contents/Resources:$PATH"
