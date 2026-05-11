@@ -110,4 +110,4 @@ function _cmpl_dcodex {
 compctl -K _cmpl_dcodex dcodex codex-devbox-project
 
 eval "$(direnv hook zsh)"
-export PATH="$HOME/.local/bin:$HOME/bin:/Applications/Codex.app/Contents/Resources:$PATH"
+export PATH="$DOTFILES/bin:$HOME/.local/bin:$HOME/bin:/Applications/Codex.app/Contents/Resources:$PATH"

@@ -1,0 +1,474 @@
+#!/usr/bin/env python3
+"""Sync listed devbox-backed Codex Desktop projects."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import posixpath
+import re
+import subprocess
+import sys
+import uuid
+from dataclasses import dataclass
+from pathlib import Path
+from urllib.parse import quote
+
+
+DEFAULT_REMOTE_PATH = "/home/ubuntu/co/devbox-client"
+DEFAULT_NAMES_FILE = Path("~/.config/devbox/names.yaml").expanduser()
+DEFAULT_CODEX_HOME = Path(os.environ.get("CODEX_HOME", "~/.codex")).expanduser()
+CODEX_CONFIG_PATH = Path("codex-app") / "config.json"
+CODEX_GLOBAL_STATE_PATH = Path(".codex-global-state.json")
+CODEX_CONFIG_DEEPLINK = "codex://codex-app/apply-config"
+DEVBOX_LIST_TIMEOUT_SECONDS = 90
+MANAGED_HOST_ID_RE = re.compile(r"^remote-ssh-discovered:devbox(?:-\d+)?$")
+
+
+class CommandError(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class DevboxListEntry:
+    index: int
+    name: str
+    ec2_state: str
+    ssh_state: str
+    ssh_alias: str
+
+
+@dataclass(frozen=True)
+class SyncStats:
+    listed_count: int
+    added_count: int
+    removed_count: int
+    updated_count: int
+
+
+def strip_yaml_scalar(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        return value[1:-1]
+    return value
+
+
+def parse_devbox_names(path: Path) -> dict[int, str]:
+    sections = {"names", "api_names"}
+    index_to_name: dict[int, str] = {}
+    current_section: str | None = None
+
+    if not path.exists():
+        raise CommandError(f"Devbox names file not found: {path}")
+
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.split("#", 1)[0].rstrip()
+        if not line.strip():
+            continue
+
+        if not line[0].isspace():
+            key = line.split(":", 1)[0].strip()
+            current_section = key if key in sections and line.strip().endswith(":") else None
+            continue
+
+        if current_section is None or ":" not in line:
+            continue
+
+        key, raw_value = line.strip().split(":", 1)
+        key = strip_yaml_scalar(key)
+        raw_value = strip_yaml_scalar(raw_value)
+        if not key or not re.fullmatch(r"\d+", raw_value):
+            continue
+
+        index_to_name.setdefault(int(raw_value), key)
+
+    return index_to_name
+
+
+def ssh_alias_for_index(index: int) -> str:
+    return "devbox" if index == 0 else f"devbox-{index}"
+
+
+TERMINAL_SEQUENCE_RE = re.compile(r"\x1b\]8;;.*?\x1b\\|\x1b\[[0-?]*[ -/]*[@-~]")
+TABLE_COLUMN_SEPARATOR = "\u2502"
+EMPTY_TABLE_CELL = "\u00b7"
+
+
+def clean_terminal_text(value: str) -> str:
+    return TERMINAL_SEQUENCE_RE.sub("", value)
+
+
+def parse_table_cells(line: str) -> list[str] | None:
+    line = clean_terminal_text(line).strip()
+    if not line.startswith(TABLE_COLUMN_SEPARATOR):
+        return None
+
+    return [cell.strip() for cell in line.strip(TABLE_COLUMN_SEPARATOR).split(TABLE_COLUMN_SEPARATOR)]
+
+
+def table_cell(cells: list[str], column_indexes: dict[str, int], column: str) -> str:
+    index = column_indexes.get(column)
+    if index is None or index >= len(cells):
+        return ""
+
+    value = cells[index].strip()
+    return "" if value == EMPTY_TABLE_CELL else value
+
+
+def parse_devbox_list_output(output: str) -> list[DevboxListEntry]:
+    column_indexes: dict[str, int] | None = None
+    entries: list[DevboxListEntry] = []
+
+    for line in output.splitlines():
+        cells = parse_table_cells(line)
+        if cells is None:
+            continue
+
+        if "IDX" in cells and "NAME" in cells and "ALIAS" in cells:
+            column_indexes = {cell: index for index, cell in enumerate(cells) if cell}
+            continue
+
+        if column_indexes is None:
+            continue
+
+        raw_index = table_cell(cells, column_indexes, "IDX")
+        if not re.fullmatch(r"\d+", raw_index):
+            continue
+
+        index = int(raw_index)
+        entries.append(
+            DevboxListEntry(
+                index=index,
+                name=table_cell(cells, column_indexes, "NAME"),
+                ec2_state=table_cell(cells, column_indexes, "EC2").lower(),
+                ssh_state=table_cell(cells, column_indexes, "SSH").lower(),
+                ssh_alias=table_cell(cells, column_indexes, "ALIAS") or ssh_alias_for_index(index),
+            )
+        )
+
+    if not entries:
+        raise CommandError("Could not parse any devboxes from 'devbox list' output.")
+
+    return entries
+
+
+def devbox_list_entries() -> list[DevboxListEntry]:
+    try:
+        result = subprocess.run(
+            ["devbox", "list"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=DEVBOX_LIST_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except FileNotFoundError as exc:
+        raise CommandError("devbox is not installed or is not on PATH.") from exc
+    except subprocess.TimeoutExpired as exc:
+        raise CommandError("Timed out while running 'devbox list'.") from exc
+
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip()
+        message = "'devbox list' failed."
+        if detail:
+            message = f"{message} devbox said: {detail}"
+        raise CommandError(message)
+
+    return parse_devbox_list_output(result.stdout)
+
+
+def listed_devbox_entries() -> list[DevboxListEntry]:
+    entries = devbox_list_entries()
+    if not entries:
+        raise CommandError("No devboxes found in 'devbox list'.")
+    return entries
+
+
+def label_for_devbox(entry: DevboxListEntry, index_to_name: dict[int, str]) -> str:
+    if entry.index in index_to_name:
+        return index_to_name[entry.index]
+    if entry.name:
+        return entry.name
+    return entry.ssh_alias
+
+
+def host_id_for_ssh_alias(ssh_alias: str) -> str:
+    return f"remote-ssh-discovered:{quote(ssh_alias, safe='')}"
+
+
+def remote_project_key(project: dict) -> tuple[str, str] | None:
+    host_id = project.get("hostId")
+    remote_path = project.get("remotePath")
+    if not isinstance(host_id, str) or not isinstance(remote_path, str):
+        return None
+    return host_id, posixpath.normpath(remote_path)
+
+
+def managed_remote_project(project: dict) -> bool:
+    key = remote_project_key(project)
+    if key is None:
+        return False
+    host_id, remote_path = key
+    return remote_path == DEFAULT_REMOTE_PATH and MANAGED_HOST_ID_RE.fullmatch(host_id) is not None
+
+
+def desired_project_specs(entries: list[DevboxListEntry], index_to_name: dict[int, str]) -> list[dict]:
+    return [
+        {
+            "hostId": host_id_for_ssh_alias(entry.ssh_alias),
+            "remotePath": DEFAULT_REMOTE_PATH,
+            "label": label_for_devbox(entry, index_to_name),
+        }
+        for entry in entries
+    ]
+
+
+def desired_config(entries: list[DevboxListEntry], index_to_name: dict[int, str]) -> dict:
+    return {
+        "version": 1,
+        "remoteConnections": [
+            {
+                "sshAlias": entry.ssh_alias,
+                "projects": [
+                    {
+                        "remotePath": DEFAULT_REMOTE_PATH,
+                        "label": label_for_devbox(entry, index_to_name),
+                    }
+                ],
+            }
+            for entry in entries
+        ],
+    }
+
+
+def load_json_object(path: Path) -> dict:
+    if not path.exists():
+        return {}
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise CommandError(f"JSON file is invalid: {path}: {exc}") from exc
+
+    if not isinstance(data, dict):
+        raise CommandError(f"JSON file must contain an object: {path}")
+
+    return data
+
+
+def write_json_if_changed(path: Path, data: dict, *, pretty: bool) -> bool:
+    if pretty:
+        text = json.dumps(data, indent=2, sort_keys=False) + "\n"
+    else:
+        text = json.dumps(data, separators=(",", ":"))
+
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return False
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f".{path.name}.tmp-{os.getpid()}")
+    try:
+        temp_path.write_text(text, encoding="utf-8")
+        os.replace(temp_path, path)
+    finally:
+        temp_path.unlink(missing_ok=True)
+    return True
+
+
+def same_project(left: dict, right: dict) -> bool:
+    return all(left.get(key) == right.get(key) for key in ("id", "hostId", "remotePath", "label"))
+
+
+def reconcile_global_state(global_state: dict, desired_projects: list[dict]) -> tuple[dict, SyncStats]:
+    current_projects = global_state.get("remote-projects")
+    if not isinstance(current_projects, list):
+        current_projects = []
+
+    current_by_key: dict[tuple[str, str], dict] = {}
+    for project in current_projects:
+        if isinstance(project, dict):
+            key = remote_project_key(project)
+            if key is not None:
+                current_by_key.setdefault(key, project)
+
+    desired_with_ids: list[dict] = []
+    added_count = 0
+    updated_count = 0
+    for desired in desired_projects:
+        key = remote_project_key(desired)
+        existing = current_by_key.get(key) if key is not None else None
+        if existing is None:
+            added_count += 1
+            project_id = str(uuid.uuid4())
+        else:
+            project_id = existing.get("id") if isinstance(existing.get("id"), str) else str(uuid.uuid4())
+
+        project = {"id": project_id, **desired}
+        if existing is not None and not same_project(project, existing):
+            updated_count += 1
+        desired_with_ids.append(project)
+
+    desired_keys = {remote_project_key(project) for project in desired_with_ids}
+    desired_ids = [project["id"] for project in desired_with_ids]
+    desired_host_ids = {project["hostId"] for project in desired_with_ids}
+    removed_ids: set[str] = set()
+    removed_count = 0
+    kept_projects: list[object] = []
+
+    for project in current_projects:
+        if not isinstance(project, dict):
+            kept_projects.append(project)
+            continue
+
+        key = remote_project_key(project)
+        if key in desired_keys:
+            continue
+
+        if managed_remote_project(project):
+            removed_count += 1
+            project_id = project.get("id")
+            if isinstance(project_id, str):
+                removed_ids.add(project_id)
+            continue
+
+        kept_projects.append(project)
+
+    next_state = dict(global_state)
+    next_state["remote-projects"] = desired_with_ids + kept_projects
+
+    current_order = next_state.get("project-order")
+    if not isinstance(current_order, list):
+        current_order = []
+    next_state["project-order"] = desired_ids + [
+        value for value in current_order if value not in desired_ids and value not in removed_ids
+    ]
+
+    auto_connect = next_state.get("remote-connection-auto-connect-by-host-id")
+    if not isinstance(auto_connect, dict):
+        auto_connect = {}
+    next_auto_connect = {
+        key: value
+        for key, value in auto_connect.items()
+        if not (isinstance(key, str) and MANAGED_HOST_ID_RE.fullmatch(key) and key not in desired_host_ids)
+    }
+    for host_id in desired_host_ids:
+        next_auto_connect[host_id] = True
+    next_state["remote-connection-auto-connect-by-host-id"] = next_auto_connect
+
+    selected_host_id = next_state.get("selected-remote-host-id")
+    if (
+        isinstance(selected_host_id, str)
+        and MANAGED_HOST_ID_RE.fullmatch(selected_host_id)
+        and selected_host_id not in desired_host_ids
+    ):
+        next_state.pop("selected-remote-host-id", None)
+
+    active_project_id = next_state.get("active-remote-project-id")
+    if isinstance(active_project_id, str) and active_project_id in removed_ids:
+        next_state.pop("active-remote-project-id", None)
+
+    stats = SyncStats(
+        listed_count=len(desired_projects),
+        added_count=added_count,
+        removed_count=removed_count,
+        updated_count=updated_count,
+    )
+    return next_state, stats
+
+
+def open_codex_apply_deeplink() -> bool:
+    if sys.platform != "darwin":
+        return False
+
+    result = subprocess.run(["open", CODEX_CONFIG_DEEPLINK], check=False)
+    return result.returncode == 0
+
+
+def codex_desktop_running() -> bool:
+    if sys.platform != "darwin":
+        return False
+
+    result = subprocess.run(
+        ["osascript", "-e", 'application "Codex" is running'],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0 and result.stdout.strip().lower() == "true"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Sync Codex Desktop remote projects for every devbox listed by devbox list.",
+        epilog="Example:\n  dcodex sync",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("command", choices=["sync"], help="Synchronize Codex remote projects from devbox list.")
+    parser.add_argument("--names-file", type=Path, default=DEFAULT_NAMES_FILE, help=f"Devbox names YAML. Default: {DEFAULT_NAMES_FILE}")
+    parser.add_argument("--codex-home", type=Path, default=DEFAULT_CODEX_HOME, help=f"Codex home. Default: {DEFAULT_CODEX_HOME}")
+    parser.add_argument("--no-open", action="store_true", help="Do not ask Codex to apply the synced config now.")
+    parser.add_argument("--dry-run", action="store_true", help="Show the sync plan without changing files.")
+    return parser.parse_args()
+
+
+def main() -> int:
+    args = parse_args()
+
+    try:
+        codex_home = args.codex_home.expanduser()
+        config_path = codex_home / CODEX_CONFIG_PATH
+        global_state_path = codex_home / CODEX_GLOBAL_STATE_PATH
+        index_to_name = parse_devbox_names(args.names_file.expanduser())
+        entries = listed_devbox_entries()
+
+        config = desired_config(entries, index_to_name)
+        desired_projects = desired_project_specs(entries, index_to_name)
+        global_state = load_json_object(global_state_path)
+        next_global_state, stats = reconcile_global_state(global_state, desired_projects)
+
+        print("Codex remote project sync")
+        print(f"  listed:     {stats.listed_count} devboxes from devbox list")
+        print(f"  path:       {DEFAULT_REMOTE_PATH}")
+        print(f"  config:     {config_path}")
+        print(f"  state:      {global_state_path}")
+        print(f"  adds:       {stats.added_count}")
+        print(f"  updates:    {stats.updated_count}")
+        print(f"  removes:    {stats.removed_count}")
+        print("  devboxes:")
+        for entry in entries:
+            label = label_for_devbox(entry, index_to_name)
+            print(f"    {entry.index:<2} {entry.ssh_alias:<8} {entry.ec2_state or '-':<8} {entry.ssh_state or '-':<4} {label}")
+
+        if args.dry_run:
+            print("  action:     dry run; no files changed")
+            return 0
+
+        if stats.removed_count > 0 and codex_desktop_running():
+            print("  action:     skipped; quit Codex and rerun sync to remove stale projects")
+            return 1
+
+        config_written = write_json_if_changed(config_path, config, pretty=True)
+        state_written = write_json_if_changed(global_state_path, next_global_state, pretty=False)
+        write_json_if_changed(global_state_path.with_suffix(".json.bak"), next_global_state, pretty=False)
+        changed = config_written or state_written
+        print(f"  action:     {'updated sync state' if changed else 'already synced'}")
+
+        if args.no_open:
+            print("  apply:      skipped; Codex will apply this config on next startup")
+            return 0
+
+        if open_codex_apply_deeplink():
+            print(f"  apply:      requested via {CODEX_CONFIG_DEEPLINK}")
+        else:
+            print("  apply:      open is unavailable; Codex will apply this config on next startup")
+        return 0
+    except CommandError as exc:
+        print(f"codex-devbox-project: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
